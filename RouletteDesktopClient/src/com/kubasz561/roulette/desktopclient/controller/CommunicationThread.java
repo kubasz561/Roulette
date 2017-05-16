@@ -18,7 +18,7 @@ public class CommunicationThread extends Thread {
     private final ObjectInputStream serverToClient;
     public final BlockingQueue<JSONMessage> outcommingMessages = new LinkedBlockingQueue<JSONMessage>();
     public final BlockingQueue<JSONMessage> incomingMessages = new LinkedBlockingQueue<JSONMessage>();
-    private final Semaphore mutex = new Semaphore(1);
+//    private final Semaphore mutex = new Semaphore(1);
 
     /**
      *
@@ -47,6 +47,8 @@ public class CommunicationThread extends Thread {
                 {
                     message = (JSONMessage)serverToClient.readObject();
                     incomingMessages.add(message);
+                    //TODO: Handle disconnection and blocking
+                    //TODO: Handle changing game_state here maybe a mutex will be needed
                 }
 
                 while((message = outcommingMessages.poll()) != null)
