@@ -17,9 +17,12 @@ public class Server {
         try {
             listener = new ServerSocket(port);
             int clientId = 1;
+            ArrayList<Handler> connectedClientsHandlers = new ArrayList<Handler>();
 
             while (true) {
-                new Handler(listener.accept(), clientId).start();
+                Handler newHandler = new Handler(listener.accept(), clientId);
+                connectedClientsHandlers.add(newHandler);
+                newHandler.start();
                 ++clientId;
             }
 

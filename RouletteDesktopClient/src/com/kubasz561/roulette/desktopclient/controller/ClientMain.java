@@ -12,7 +12,7 @@ public class ClientMain {
         int port = 1234;
         System.out.println("Trying to connect to: " + ip + " " + port);
         try {
-            new Client(ip,port).start();
+            new CommunicationThread(ip,port).start();
 
         } catch (IOException e) {
             System.out.println("Unable to connect");
