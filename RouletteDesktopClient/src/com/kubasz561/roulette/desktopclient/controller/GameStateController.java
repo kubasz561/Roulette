@@ -2,6 +2,8 @@ package com.kubasz561.roulette.desktopclient.controller;
 
 import com.kubasz561.roulette.common.JSONMessage;
 
+import java.io.IOException;
+
 /**
  * Created by sackhorn on 16.05.17.
  */
@@ -15,19 +17,25 @@ public class GameStateController {
     }
 
 
-    public void handleIncomingMessages() throws InterruptedException {
-        JSONMessage msg = mainOverseer.communicationThread.incomingMessages.take();
-
+    public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
+        System.out.print(msg.rawJSONString);
     }
 
 
-    //USE ONLY WITHIN handleIncomingMessage to ensure that mutex is locked before changing flag
-    public void sendMessage(JSONMessage msg)
+    public boolean sendMessage(JSONMessage msg) throws IOException, InterruptedException
     {
-        assert mainOverseer.comFlagSemaphore.availablePermits() != 0;
-        mainOverseer.sendFlag = true;
-        mainOverseer.listenFlag = false;
-        mainOverseer.communicationThread.outcommingMessages.add(msg);
+        if(mainOverseer.comFlagSemaphore.tryAcquire())
+        {
+            mainOverseer.listenFlag = false;
+            mainOverseer.communicationThread.sendMessage(msg);
+            mainOverseer.comFlagSemaphore.release();
+            return true;
+        }
+        else
+        {
+            System.out.print("Communication socket was busy when trying to send a message");
+            return false;
+        }
     }
 
 

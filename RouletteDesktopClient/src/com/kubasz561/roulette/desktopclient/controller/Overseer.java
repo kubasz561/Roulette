@@ -12,8 +12,7 @@ public class Overseer {
     public static Overseer Instance;
 
     public boolean isRunningFlag = true;
-    public boolean listenFlag = true;
-    public boolean sendFlag = true;
+    public boolean listenFlag = true; //TODO: The listenFlag May not be necessary since we are using semaphores but i will let i stay for now
     Semaphore comFlagSemaphore = new Semaphore(1);
     JFrame currentView;
     ViewController currentViewController;

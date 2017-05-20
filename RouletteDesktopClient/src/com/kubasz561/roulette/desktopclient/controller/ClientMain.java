@@ -12,7 +12,6 @@ public class ClientMain {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         //TODO: usunąć to i zamiast tego dodać pola w ConnectView
-
         String ip = "127.0.0.1";
         int port = 1234;
         System.out.println("Trying to connect to: " + ip + " " + port);
