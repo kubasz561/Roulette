@@ -11,7 +11,7 @@ import java.util.concurrent.Semaphore;
 public class ServerOverseer {
     public ArrayList<Client> clientList = new ArrayList<>();
     public int clientsNmbr = 0;
-    public Semaphore gameLogicSemaphore = new Semaphore(1);
+    public Semaphore gameLogicMutex = new Semaphore(1);
     public ServerGameLogic serverGameLogic = new ServerGameLogic();
     public boolean isRunning = true;
 
@@ -28,6 +28,8 @@ public class ServerOverseer {
     {
         clientsNmbr++;
         clientList.add(client);
+        if(clientsNmbr==1)
+            serverGameLogic.phaseTimer(); //Starting the betting round
     }
 
 }

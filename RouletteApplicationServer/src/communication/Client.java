@@ -12,7 +12,6 @@ public class Client {
     public int clientId;
     public String passHash;
     public double accountBalance;
-    public ArrayList<JSONMessage> clientsMessagesList = new ArrayList<>();
 
     public Client(JSONMessage logInMessage)
     {

@@ -4,11 +4,13 @@ import com.kubasz561.roulette.common.JSONMessage;
 import game_logic.ServerOverseer;
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
 
 public class ServerCommunicationThread extends Thread{
     private Socket socket;
     private ObjectInputStream clientToServer;
     private ObjectOutputStream serverToClient;
+    private Semaphore clientCommunicationSemaphore = new Semaphore(1);
     public ServerOverseer serverOverseer = ServerOverseer.getInstance();
     public boolean authenticatedSuccessfully = false;
 
@@ -22,9 +24,14 @@ public class ServerCommunicationThread extends Thread{
             Client connectedClient = new Client((JSONMessage)clientToServer.readObject());
             connectedClient.thisClientComThread = this;
             authenticatedSuccessfully = connectedClient.authenticateClient();
-            //TODO: catch the fact that client haven't authenticated before running Thread
             if(authenticatedSuccessfully)
+            {
+                serverOverseer.gameLogicMutex.acquireUninterruptibly();
                 serverOverseer.addNewClient(connectedClient);
+                //TODO: send user JSONMessage describing current game state
+                //sendMessage(serverOverseer.gameStateController.currentStateMessage)
+                serverOverseer.gameLogicMutex.release();
+            }
         }
         catch (IOException | ClassNotFoundException e)
         {
@@ -42,10 +49,12 @@ public class ServerCommunicationThread extends Thread{
             {
                 if (clientToServer.available() > 0)
                 {
-                    serverOverseer.gameLogicSemaphore.acquireUninterruptibly();
+                    this.clientCommunicationSemaphore.acquireUninterruptibly();
+                    serverOverseer.gameLogicMutex.acquireUninterruptibly();
                     JSONMessage msg = (JSONMessage)clientToServer.readObject();
                     serverOverseer.serverGameLogic.handleMessage(msg);
-                    serverOverseer.gameLogicSemaphore.acquireUninterruptibly();
+                    serverOverseer.gameLogicMutex.release();
+                    this.clientCommunicationSemaphore.release();
                 }
             }
         }
@@ -59,8 +68,12 @@ public class ServerCommunicationThread extends Thread{
 
     public void sendMessage(JSONMessage msg) throws IOException
     {
-        if(serverOverseer.gameLogicSemaphore.availablePermits() == 0)
+        if(serverOverseer.gameLogicMutex.availablePermits() == 0)
+        {
+            this.clientCommunicationSemaphore.acquireUninterruptibly();
             serverToClient.writeObject(msg);
+            this.clientCommunicationSemaphore.release();
+        }
         else
             throw new IOException("Not able to send a message because of missing mutexLock");
     }

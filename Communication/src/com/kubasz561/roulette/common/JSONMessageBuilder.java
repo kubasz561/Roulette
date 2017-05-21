@@ -9,22 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JSONMessageBuilder implements Serializable{
-    public static JSONMessageBuilder instance;
-    public static final Map<MessageType, String> typeToStringTemplateMap = new HashMap<MessageType,String>();
-
-    public static JSONMessageBuilder getInstance()
-    {
-        if(instance==null)
-        {
-            instance = new JSONMessageBuilder();
-            return instance;
-        }
-        else
-            return instance;
-    }
+    private static final Map<MessageType, String> typeToStringTemplateMap = new HashMap<>();
+    private JSONMessageBuilder(){}
 
     //TODO: Wprowadzić template'y do fomratowania stringów z komunikatami
-    private JSONMessageBuilder()
+    static
     {
         typeToStringTemplateMap.put(MessageType.SIGN_UP, "");
         typeToStringTemplateMap.put(MessageType.SIGN_UP_OK, "");
