@@ -1,15 +1,15 @@
-package com.kubasz561.roulette.desktopclient.controller;
+package communication_and_logic;
 
+import logic.GameStateController;
+import logic.Overseer;
 import view.ConnectView;
 import view_controllers.LoginViewController;
-
 import java.io.*;
-/**
- *
- */
+
 public class ClientMain {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException
+    {
 
         //TODO: usunąć to i zamiast tego dodać pola w ConnectView
         String ip = "127.0.0.1";
@@ -17,9 +17,6 @@ public class ClientMain {
         System.out.println("Trying to connect to: " + ip + " " + port);
 
         Overseer mainOverseer = Overseer.getInstance();
-        mainOverseer.currentView = new ConnectView();
-        mainOverseer.currentViewController = new LoginViewController();
-        mainOverseer.gameStateController = new GameStateController();
 
         //TODO: przenieśc to do GameStateController i LoginViewController
         ClientCommunicationThread comThread = connectToServer(ip, port);
@@ -39,6 +36,7 @@ public class ClientMain {
         }
         catch (IOException e)
         {
+            e.printStackTrace();
             System.out.println("Unable to connect");
             return null;
         }

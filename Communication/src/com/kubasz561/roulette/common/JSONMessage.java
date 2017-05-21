@@ -9,5 +9,4 @@ public class JSONMessage{
         rawJSONString = rawMessage;
         msgType = type;
     }
-
 }

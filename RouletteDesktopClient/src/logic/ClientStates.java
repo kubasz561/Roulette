@@ -1,4 +1,4 @@
-package com.kubasz561.roulette.desktopclient.controller;
+package logic;
 
 /**
  * Created by sackhorn on 16.05.17.

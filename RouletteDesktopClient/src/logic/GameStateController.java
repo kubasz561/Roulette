@@ -1,6 +1,8 @@
-package com.kubasz561.roulette.desktopclient.controller;
+package logic;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import logic.ClientStates;
+import logic.Overseer;
 
 import java.io.IOException;
 
@@ -37,6 +39,4 @@ public class GameStateController {
             return false;
         }
     }
-
-
 }

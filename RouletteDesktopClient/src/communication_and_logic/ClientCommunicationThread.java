@@ -1,9 +1,10 @@
-package com.kubasz561.roulette.desktopclient.controller;
+package communication_and_logic;
 
 import java.io.*;
 import java.net.Socket;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import logic.Overseer;
 
 
 /**
@@ -41,7 +42,7 @@ public class ClientCommunicationThread extends Thread {
                 {
                     while (serverToClient.available() > 0)
                     {
-                        mainOverseer.comFlagSemaphore.acquire();
+                        mainOverseer.comFlagSemaphore.acquireUninterruptibly();
                         mainOverseer.listenFlag = false; //TODO: may not be necessary, leave it be for now
                         message = (JSONMessage) serverToClient.readObject();
                         mainOverseer.gameStateController.handleIncomingMessage(message);
