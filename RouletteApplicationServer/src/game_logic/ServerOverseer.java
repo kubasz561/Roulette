@@ -30,6 +30,7 @@ public class ServerOverseer {
         clientList.add(client);
         if(clientsNmbr==1)
             serverGameLogic.phaseTimer(); //Starting the betting round
+        client.setClientId(clientList.size());
     }
 
 }
