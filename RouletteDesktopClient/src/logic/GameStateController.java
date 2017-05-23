@@ -12,10 +12,10 @@ import java.io.IOException;
 public class GameStateController {
     ClientStates currentState;
     Overseer mainOverseer;
-    public GameStateController()
+    public GameStateController(Overseer overseer)
     {
         currentState = ClientStates.UNCONNECTED;
-        mainOverseer = Overseer.getInstance();
+        mainOverseer = overseer;
     }
 
 

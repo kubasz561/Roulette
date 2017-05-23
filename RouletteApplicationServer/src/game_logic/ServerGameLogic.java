@@ -14,7 +14,12 @@ public class ServerGameLogic
 {
     public PhaseTimer phaseTimer;
     private GameState currentGameState = GameState.WAITING_FOR_PLAYERS;
-    private ServerOverseer serverOverseer = ServerOverseer.getInstance();
+    private ServerOverseer serverOverseer;
+
+    public ServerGameLogic(ServerOverseer overseer)
+    {
+        serverOverseer = overseer;
+    }
 
     public void handleMessage(JSONMessage msg)
     {

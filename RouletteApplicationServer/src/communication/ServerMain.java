@@ -5,6 +5,7 @@ import game_logic.ServerOverseer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -20,15 +21,19 @@ public class ServerMain {
         {
             listener = new ServerSocket(1234);
             ServerOverseer serverOverseer = ServerOverseer.getInstance();
-            serverOverseer.serverGameLogic = new ServerGameLogic();
 
-            while (true)
+
+            while (serverOverseer.isRunning)
             {
-                ServerCommunicationThread newClient = new ServerCommunicationThread(listener.accept());
+                System.out.println();
+                Socket newClientSocket = listener.accept();
+                serverOverseer.gameLogicMutex.acquireUninterruptibly();
+                ServerCommunicationThread newClient = new ServerCommunicationThread(newClientSocket);
                 if(newClient.authenticatedSuccessfully)
                     newClient.run();
                 else
                     System.out.println("Client tried connecting but couldn't authenticate");
+                serverOverseer.gameLogicMutex.release();
             }
 
         } catch (Exception e) {

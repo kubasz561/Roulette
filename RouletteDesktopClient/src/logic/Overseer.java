@@ -19,7 +19,7 @@ public class Overseer {
     public Semaphore comFlagSemaphore = new Semaphore(1);
     public JFrame currentView = new ConnectView();
     public ViewController currentViewController = new LoginViewController();
-    public GameStateController gameStateController = new GameStateController();
+    public GameStateController gameStateController = new GameStateController(this);
     public ClientCommunicationThread communicationThread;
 
     private Overseer(){}
