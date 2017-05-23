@@ -12,7 +12,7 @@ public class ServerOverseer {
     public ArrayList<Client> clientList = new ArrayList<>();
     public int clientsNmbr = 0;
     public Semaphore gameLogicMutex = new Semaphore(1);
-    public ServerGameLogic serverGameLogic = new ServerGameLogic();
+    public ServerGameLogic serverGameLogic;
     public boolean isRunning = true;
 
     private static ServerOverseer Instance;

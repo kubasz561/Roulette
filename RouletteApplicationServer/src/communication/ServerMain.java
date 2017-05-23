@@ -1,5 +1,6 @@
 package communication;
 
+import game_logic.ServerGameLogic;
 import game_logic.ServerOverseer;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class ServerMain {
         {
             listener = new ServerSocket(1234);
             ServerOverseer serverOverseer = ServerOverseer.getInstance();
+            serverOverseer.serverGameLogic = new ServerGameLogic();
+
             while (true)
             {
                 ServerCommunicationThread newClient = new ServerCommunicationThread(listener.accept());
@@ -29,6 +32,7 @@ public class ServerMain {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("blad klienta");
 
         } finally {
