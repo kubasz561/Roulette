@@ -89,6 +89,16 @@ public class JSONMessage{
         }
 
     }
+    public String getRawJSONString() {
+        return rawJSONString;
+    }
 
+    public MessageType getMsgType() {
+        return msgType;
+    }
+
+    public Map<String, String> getDictionary() {
+        return dictionary;
+    }
 
 }

@@ -18,6 +18,37 @@ public class ServerGameLogic
 
     public void handleMessage(JSONMessage msg)
     {
+        switch(msg.getMsgType()){
+            case SIGN_UP:
+                String userLogin = msg.getDictionary().get("login");
+                String userPassword = msg.getDictionary().get("password");
+
+                /*wywołanie funkcji sprawdzającej z logowanie w bazie
+                * loginAccepted = serverOverseer.database.checkLogin(userLogin, userPassword);
+                * */
+                boolean loginAccepted = true; //do pobrania
+               // if(loginAccepted)
+                // tu dodajemy wskazanie na klienta w sendmessage
+                  //  serverOverseer.sendMessage(findClient(userLogin), SIGN_UP_OK);
+              //  else
+                //    serverOverseer.sendMessage
+                break;
+            case LOG_IN:
+
+                break;
+
+            case LOG_OUT:
+
+                break;
+
+            case SET_BET:
+
+                break;
+
+            default:
+                break;
+
+        }
 
     }
 
