@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import com.kubasz561.roulette.common.JSONMessageBuilder;
 import logic.Overseer;
 
 
@@ -26,7 +27,11 @@ public class ClientCommunicationThread extends Thread {
         clientSocket = new Socket(ip,port);
         clientToServer = new ObjectOutputStream(clientSocket.getOutputStream());
         serverToClient = new ObjectInputStream(clientSocket.getInputStream());
+        //clientToServer.writeObject(JSONMessageBuilder.create_message("LOG_IN")); //TODO:Send login data
     }
+
+    //TODO:New Constructor that doesn't log in but signs up
+
 
 
     @Override
@@ -53,14 +58,14 @@ public class ClientCommunicationThread extends Thread {
                     }
                 }
             }
-            close_all();
-
         } catch (IOException e){
             e.printStackTrace();
             System.out.println("Error while communicating closing");
-            close_all();
         } catch (ClassNotFoundException | InterruptedException e) {
             e.printStackTrace();
+        }
+        finally {
+            close_all();
         }
     }
 

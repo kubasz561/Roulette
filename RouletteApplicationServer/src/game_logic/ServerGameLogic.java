@@ -21,7 +21,7 @@ public class ServerGameLogic
         serverOverseer = overseer;
     }
 
-    public void handleMessage(JSONMessage msg)
+    public void handleMessage(JSONMessage msg, Client msgSender)
     {
 
     }
@@ -48,7 +48,7 @@ public class ServerGameLogic
             //TODO: Build a message with a timestamp to next round and data about round
             JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,"Kaczka");
             try {
-                client.thisClientComThread.sendMessage(tmpMsg);
+                client.clientComThread.sendMessage(tmpMsg);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -25,12 +25,15 @@ public class ServerMain {
 
             while (serverOverseer.isRunning)
             {
-                System.out.println();
+                System.out.println("Server listening for clients");
                 Socket newClientSocket = listener.accept();
+                System.out.println("New client connected");
                 serverOverseer.gameLogicMutex.acquireUninterruptibly();
                 ServerCommunicationThread newClient = new ServerCommunicationThread(newClientSocket);
-                if(newClient.authenticatedSuccessfully)
+                if(newClient.authenticatedSuccessfully) {
                     newClient.run();
+                    System.out.println("New client authenticated");
+                }
                 else
                     System.out.println("Client tried connecting but couldn't authenticate");
                 serverOverseer.gameLogicMutex.release();

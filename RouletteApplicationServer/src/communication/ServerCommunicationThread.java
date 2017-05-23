@@ -13,6 +13,7 @@ public class ServerCommunicationThread extends Thread{
     private Semaphore clientCommunicationSemaphore = new Semaphore(1);
     public ServerOverseer serverOverseer = ServerOverseer.getInstance();
     public boolean authenticatedSuccessfully = false;
+    public Client thisComThreadClient;
 
     public ServerCommunicationThread(Socket clientSocket)
     {
@@ -21,16 +22,13 @@ public class ServerCommunicationThread extends Thread{
             socket = clientSocket;
             clientToServer = new ObjectInputStream(clientSocket.getInputStream());
             serverToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-            Client connectedClient = new Client((JSONMessage)clientToServer.readObject());
-            connectedClient.thisClientComThread = this;
-            authenticatedSuccessfully = connectedClient.authenticateClient();
+            Client connectedClient = new Client((JSONMessage)clientToServer.readObject(), this);
+            thisComThreadClient = connectedClient;
+            authenticatedSuccessfully = connectedClient.authenticatedSuccesfully;
             if(authenticatedSuccessfully)
             {
-                serverOverseer.gameLogicMutex.acquireUninterruptibly();
                 serverOverseer.addNewClient(connectedClient);
-                //TODO: send user JSONMessage describing current game state
-                //sendMessage(serverOverseer.gameStateController.currentStateMessage)
-                serverOverseer.gameLogicMutex.release();
+                //sendMessage(serverOverseer.gameStateController.currentStateMessage) //TODO: send user JSONMessage describing game state
             }
         }
         catch (IOException | ClassNotFoundException e)
@@ -52,7 +50,7 @@ public class ServerCommunicationThread extends Thread{
                     this.clientCommunicationSemaphore.acquireUninterruptibly();
                     serverOverseer.gameLogicMutex.acquireUninterruptibly();
                     JSONMessage msg = (JSONMessage)clientToServer.readObject();
-                    serverOverseer.serverGameLogic.handleMessage(msg);
+                    serverOverseer.serverGameLogic.handleMessage(msg, thisComThreadClient);
                     serverOverseer.gameLogicMutex.release();
                     this.clientCommunicationSemaphore.release();
                 }
@@ -62,8 +60,9 @@ public class ServerCommunicationThread extends Thread{
         {
             e.printStackTrace();
         }
-
-        closeConnection();
+        finally {
+            closeConnection();
+        }
     }
 
     public void sendMessage(JSONMessage msg) throws IOException
