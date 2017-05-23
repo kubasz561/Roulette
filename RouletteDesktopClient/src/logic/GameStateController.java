@@ -1,6 +1,7 @@
 package logic;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import communication_and_logic.ClientCommunicationThread;
 import logic.ClientStates;
 import logic.Overseer;
 
@@ -38,5 +39,34 @@ public class GameStateController {
             System.out.print("Communication socket was busy when trying to send a message");
             return false;
         }
+    }
+    public void connect(String host, int port){
+        //TODO: przenieśc to do GameStateController i LoginViewController
+        ClientCommunicationThread comThread = connectToServer(host, port);
+        mainOverseer.communicationThread = comThread;
+
+        assert comThread != null;
+        try {
+          //  comThread.join();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static ClientCommunicationThread connectToServer(String ip, int port)
+    {
+        ClientCommunicationThread newCommunicationThread;
+        try
+        {
+            newCommunicationThread = new ClientCommunicationThread(ip,port);
+            newCommunicationThread.start();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            System.out.println("Unable to connect");
+            return null;
+        }
+        return newCommunicationThread;
     }
 }
