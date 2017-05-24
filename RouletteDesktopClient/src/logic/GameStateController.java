@@ -41,7 +41,6 @@ public class GameStateController {
         }
     }
     public void connect(String host, int port){
-        //TODO: przenieśc to do GameStateController i LoginViewController
         ClientCommunicationThread comThread = connectToServer(host, port);
         mainOverseer.communicationThread = comThread;
 
