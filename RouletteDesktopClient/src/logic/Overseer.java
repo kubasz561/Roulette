@@ -6,11 +6,6 @@ import com.kubasz561.roulette.common.MessageType;
 import communication_and_logic.ClientCommunicationThread;
 import view.ConnectGUI;
 import view.LoginView;
-/*import view.ConnectView;
-import view_controllers.LoginViewController;
-import view_controllers.ViewController;
-
-import javax.swing.*;*/
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.Semaphore;
@@ -24,8 +19,6 @@ public class Overseer {
     public boolean isRunningFlag = true;
     public boolean listenFlag = true; //TODO: The listenFlag May not be necessary since we are using semaphores but i will let i stay for now
     public Semaphore comFlagSemaphore = new Semaphore(1);
-    //public JFrame currentView = new ConnectView();
-    //public ViewController currentViewController = new LoginViewController();
     public GameStateController gameStateController = new GameStateController(this);
     public ClientCommunicationThread communicationThread;
     private ConnectGUI connectGUI;

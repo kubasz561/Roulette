@@ -23,7 +23,7 @@ public class ServerGameLogic
 
     public void handleMessage(JSONMessage msg, Client msgSender)
     {
-
+        System.out.println(msg.getRawJSONString());
     }
 
     //Use this to change currentGameState in PhaseTimer

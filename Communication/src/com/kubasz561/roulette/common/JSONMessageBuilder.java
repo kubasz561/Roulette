@@ -10,7 +10,6 @@ public class JSONMessageBuilder implements Serializable{
     private static final Map<MessageType, String> typeToStringTemplateMap = new HashMap<>();
     private JSONMessageBuilder(){}
 
-    //private String signUpTemplate =
     //TODO: Wprowadzić template'y do fomratowania stringów z komunikatami
     static
     {
