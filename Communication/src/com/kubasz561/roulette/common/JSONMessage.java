@@ -23,27 +23,10 @@ public class JSONMessage implements Serializable{
     {
         rawJSONString = rawMessage;
         msgType = type;
-        dictionaryCreate();
         parseJSONString(rawJSONString);
     }
 
-    private void dictionaryCreate(){
-        dictionary.put("login", null);
-        dictionary.put("password", null);
-        dictionary.put("response", null);
-        dictionary.put("request", null);
-        dictionary.put("bet", null);
-        dictionary.put("value", null);
-        dictionary.put("session_number", null);
-        dictionary.put("timestamp", null);
-        dictionary.put("round_time", null);
-        dictionary.put("account_balance", null);
-        dictionary.put("result", null);
-        dictionary.put("bet_list", null);
-
-    }
     public void parseJSONString(String JSONtoParse){
-        dictionaryCreate();
         String delims = "[ \\{ ' , : \\}]+";
         String[] tokens = JSONtoParse.split(delims);
         int i = 0;
