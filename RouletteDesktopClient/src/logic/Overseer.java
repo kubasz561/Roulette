@@ -1,13 +1,7 @@
 package logic;
 
-import com.kubasz561.roulette.common.JSONMessage;
-import com.kubasz561.roulette.common.JSONMessageBuilder;
-import com.kubasz561.roulette.common.MessageType;
 import communication_and_logic.ClientCommunicationThread;
 import view.ConnectGUI;
-import view.LoginView;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -22,13 +16,8 @@ public class Overseer {
     public GameStateController gameStateController = new GameStateController(this);
     public ClientCommunicationThread communicationThread;
     private ConnectGUI connectGUI;
-    private LoginView loginView;
 
     private Overseer(){
-        connectGUI = new ConnectGUI();
-        loginView = new LoginView();
-        connectGUI.addActionListener(new ConnectActionListener());
-        connectGUI.init();
     }
 
     public static Overseer getInstance()
@@ -38,22 +27,4 @@ public class Overseer {
         return Instance;
     }
 
-
-    class ConnectActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            gameStateController.connect(connectGUI.getHost(), connectGUI.getPort());
-            loginView.addActionListener(new LoginActionListener());
-            loginView.init();
-        }
-    }
-    class LoginActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.LOG_IN,loginView.getLogin(), loginView.getPassword());
-            try{
-                gameStateController.sendMessage(loginMsg);
-            } catch (Exception e) {
-                e.printStackTrace(); //TODO: Handlowac tym glebiej
-            }
-        }
-    }
 }

@@ -1,10 +1,13 @@
 package logic;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import com.kubasz561.roulette.common.JSONMessageBuilder;
+import com.kubasz561.roulette.common.MessageType;
 import communication_and_logic.ClientCommunicationThread;
-import logic.ClientStates;
-import logic.Overseer;
+import view.ConnectGUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 /**
@@ -13,12 +16,38 @@ import java.io.IOException;
 public class GameStateController {
     ClientStates currentState;
     Overseer mainOverseer;
+    ConnectGUI connectGUI;
     public GameStateController(Overseer overseer)
     {
         currentState = ClientStates.UNCONNECTED;
         mainOverseer = overseer;
+        connectGUI = new ConnectGUI();
+        connectGUI.addLoginActionListener(new LoginActionListener());
+        connectGUI.addSignUpActionListener(new SignUpActionListener());
     }
 
+    class SignUpActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            connect(connectGUI.getHost(), connectGUI.getPort());
+            JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.SIGN_UP,connectGUI.getLogin(), connectGUI.getPassword());
+            try{
+                sendMessage(loginMsg);
+            } catch (Exception e) {
+                e.printStackTrace(); //TODO: Handlowac tym glebiej
+            }
+        }
+    }
+    class LoginActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            connect(connectGUI.getHost(), connectGUI.getPort());
+            JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.LOG_IN,connectGUI.getLogin(), connectGUI.getPassword());
+            try{
+               sendMessage(loginMsg);
+            } catch (Exception e) {
+                e.printStackTrace(); //TODO: Handlowac tym glebiej
+            }
+        }
+    }
 
     public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
         System.out.print(msg.rawJSONString);
