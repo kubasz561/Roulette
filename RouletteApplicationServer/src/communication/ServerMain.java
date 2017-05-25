@@ -31,7 +31,7 @@ public class ServerMain {
                 serverOverseer.gameLogicMutex.acquireUninterruptibly();
                 ServerCommunicationThread newClient = new ServerCommunicationThread(newClientSocket);
                 if(newClient.authenticatedSuccessfully) {
-                    newClient.run();
+                    newClient.start();
                     System.out.println("New client authenticated");
                 }
                 else

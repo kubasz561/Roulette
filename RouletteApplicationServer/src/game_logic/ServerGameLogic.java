@@ -38,7 +38,7 @@ public class ServerGameLogic
     public void phaseTimer()
     {
         phaseTimer = new PhaseTimer();
-        phaseTimer.run();
+        phaseTimer.start();
     }
 
     public void sendStateUpdateToClients()

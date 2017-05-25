@@ -6,9 +6,9 @@ package game_logic;
  */
 public class PhaseTimer extends Thread{
     private ServerOverseer serverOverseer = ServerOverseer.getInstance();
-    private long bettingTime = 45000;
-    private long rollinTime = 45000;
-    private long resultsTime = 45000;
+    private long bettingTime = 4500000;//TODO: jakieś randowowe wartości to są pobierać resztę z configa z bazki
+    private long rollinTime = 4500000;
+    private long resultsTime = 4500000;
 
 
     @Override
@@ -18,6 +18,7 @@ public class PhaseTimer extends Thread{
         {
             while(serverOverseer.isRunning)
             {
+                wait(bettingTime); // oczekiwanie po wejściu pierwszego klienta
                 serverOverseer.serverGameLogic.changeGameState(GameState.BETTING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients();
                 wait(bettingTime);
