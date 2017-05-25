@@ -1,6 +1,8 @@
 package communication;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import com.kubasz561.roulette.common.JSONMessageBuilder;
+import com.kubasz561.roulette.common.MessageType;
 import game_logic.ServerOverseer;
 import java.io.*;
 import java.net.Socket;
@@ -28,6 +30,7 @@ public class ServerCommunicationThread extends Thread{
             if(authenticatedSuccessfully)
             {
                 serverOverseer.addNewClient(connectedClient);
+                sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK,null));
                 //sendMessage(serverOverseer.gameStateController.currentStateMessage) //TODO: send user JSONMessage describing game state
             }
         }
