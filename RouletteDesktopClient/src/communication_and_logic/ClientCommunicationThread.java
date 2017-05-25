@@ -45,17 +45,14 @@ public class ClientCommunicationThread extends Thread {
             {
                 if(mainOverseer.listenFlag)
                 {
-                    while (serverToClient.available() > 0)
-                    {
+                        message = (JSONMessage) serverToClient.readObject();
                         mainOverseer.comFlagSemaphore.acquireUninterruptibly();
                         mainOverseer.listenFlag = false; //TODO: may not be necessary, leave it be for now
-                        message = (JSONMessage) serverToClient.readObject();
                         mainOverseer.gameStateController.handleIncomingMessage(message);
                         mainOverseer.listenFlag = true;//TODO: see previous TODO
                         if(!mainOverseer.listenFlag)
                             throw new IOException("listen flag turned off after handling of a message");
                         mainOverseer.comFlagSemaphore.release();
-                    }
                 }
             }
         } catch (IOException e){

@@ -45,15 +45,12 @@ public class ServerCommunicationThread extends Thread{
         {
             while (serverOverseer.isRunning)
             {
-                if (clientToServer.available() > 0)
-                {
+                    JSONMessage msg = (JSONMessage)clientToServer.readObject();
                     this.clientCommunicationSemaphore.acquireUninterruptibly();
                     serverOverseer.gameLogicMutex.acquireUninterruptibly();
-                    JSONMessage msg = (JSONMessage)clientToServer.readObject();
                     serverOverseer.serverGameLogic.handleMessage(msg, thisComThreadClient);
                     serverOverseer.gameLogicMutex.release();
                     this.clientCommunicationSemaphore.release();
-                }
             }
         }
         catch(IOException | ClassNotFoundException e)
