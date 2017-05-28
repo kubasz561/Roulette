@@ -131,7 +131,7 @@ public class GameStateController {
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_RESULT);
                 bettingGUI.clearBetResult();
                 bettingGUI.setResultLabel(msg.getDictionary().get("result"));
-                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance")); // nie wiem czemu tu nie wyciaga nic
                 //wyswietlić wynik losowania
                 break;
             case TIMESTAMP_TO_ROLL:
