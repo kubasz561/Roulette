@@ -4,8 +4,10 @@ import com.kubasz561.roulette.common.JSONMessage;
 import com.kubasz561.roulette.common.JSONMessageBuilder;
 import com.kubasz561.roulette.common.MessageType;
 import communication_and_logic.ClientCommunicationThread;
+import view.BettingGUI;
 import view.ConnectGUI;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -17,8 +19,11 @@ public class GameStateController {
     ClientStates currentState;
     Overseer mainOverseer;
     ConnectGUI connectGUI;
-    public GameStateController(Overseer overseer)
-    {
+    BettingGUI bettingGUI;
+    String clientLogin;
+    String clientPassword;
+
+    public GameStateController(Overseer overseer) {
         currentState = ClientStates.UNCONNECTED;
         mainOverseer = overseer;
         connectGUI = new ConnectGUI();
@@ -40,22 +45,92 @@ public class GameStateController {
     class LoginActionListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             connect(connectGUI.getHost(), connectGUI.getPort());
+            //tu trzeba walidację jakąś zrobić
             JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.LOG_IN,connectGUI.getLogin(), connectGUI.getPassword());
             try{
-               sendMessage(loginMsg);
+                sendMessage(loginMsg);
             } catch (Exception e) {
                 e.printStackTrace(); //TODO: Handlowac tym glebiej
             }
         }
     }
-
-    public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
-        System.out.print(msg.rawJSONString);
+    class BetActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            if(bettingGUI.getBetAmount().isEmpty())
+                 return;
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+                return;
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"red" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            try{
+                sendMessage(betMsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
+                                        // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
+        }
     }
 
 
-    public boolean sendMessage(JSONMessage msg) throws IOException, InterruptedException
-    {
+    public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
+
+        System.out.print(msg.rawJSONString);
+        switch(msg.getMsgType()){
+            case SIGN_UP_OK:
+                this.clientLogin = connectGUI.getLogin();
+                this.clientPassword = connectGUI.getPassword();
+                changeLogToGameFrame();
+                break;
+
+            case LOGIN_OK:
+                this.clientLogin = connectGUI.getLogin();
+                this.clientPassword = connectGUI.getPassword();
+                changeLogToGameFrame();
+                break;
+
+            case LOGIN_DUPLICATE:
+                // tego chyba wgl nie bedzie skoro jesli logowanie i rejestracja tak samo działaja
+                break;
+
+            case BET_OK:
+                // tu coś w widoku trzeba będzie pokazać
+                bettingGUI.unlockBettingGUI();
+               // bettingGUI.set
+                break;
+            case WRONG_PASS:
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "Wrong password for given Login.");
+                connectGUI.clearPassword();
+                break;
+            case BLOCKED:
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "User blocked");
+                break;
+            case BET_UNABLE:
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "Unable to bet.");
+                break;
+            case TIMESTAMP_TO_BET:
+                bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_BET);
+                bettingGUI.unlockBettingGUI();
+                //odblokować wpisywanie wartosci betu i przycisk betowania
+                break;
+            case TIMESTAMP_TO_RESULT:
+                bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_RESULT);
+                bettingGUI.setResultLabel(msg.getDictionary().get("result"));
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
+                //wyswietlić wynik losowania
+                break;
+            case TIMESTAMP_TO_ROLL:
+                bettingGUI.lockBettingGUI();
+                bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_ROLL);
+                //zablokowac wpisywanie wartosci betu i przycisk betowania + Licznik
+                break;
+            default:
+                break;
+        }
+    }
+    public boolean sendMessage(JSONMessage msg) throws IOException, InterruptedException {
         if(mainOverseer.comFlagSemaphore.tryAcquire())
         {
             mainOverseer.listenFlag = false;
@@ -81,8 +156,7 @@ public class GameStateController {
             e.printStackTrace();
         }
     }
-    private static ClientCommunicationThread connectToServer(String ip, int port)
-    {
+    private static ClientCommunicationThread connectToServer(String ip, int port) {
         ClientCommunicationThread newCommunicationThread;
         try
         {
@@ -96,5 +170,10 @@ public class GameStateController {
             return null;
         }
         return newCommunicationThread;
+    }
+    private void changeLogToGameFrame(){
+        bettingGUI = new BettingGUI();
+        bettingGUI.addBetActionListener(new BetActionListener());
+        connectGUI.setVisible(false);
     }
 }

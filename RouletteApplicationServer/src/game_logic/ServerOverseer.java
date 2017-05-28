@@ -23,7 +23,12 @@ public class ServerOverseer {
             Instance = new ServerOverseer();
         return Instance;
     }
+    public void deleteClientFromList(Client clientToFind){
+        for(Client client : clientList)
+            if(client.equals(clientToFind))
+                return;/// tu zrobić usunięcie z listy??? czy coś podobnego
 
+    }
     public void addNewClient(Client client)
     {
         clientsNmbr++;

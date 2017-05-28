@@ -11,7 +11,7 @@ public class ConnectGUI extends JFrame{
     private JTextField portField;
     private JButton loginButton;
     private JPanel panel;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
     private JButton signupButton;
     private JTextField loginField;
 
@@ -39,5 +39,7 @@ public class ConnectGUI extends JFrame{
     public String getPassword(){
         return passwordField.getText();
     }
-
+    public void clearPassword(){
+        passwordField.setText("");
+    }
 }

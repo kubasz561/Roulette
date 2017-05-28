@@ -24,6 +24,25 @@ public class ServerGameLogic
     public void handleMessage(JSONMessage msg, Client msgSender)
     {
         System.out.println(msg.getRawJSONString());
+        switch(msg.getMsgType()){
+            case SIGN_UP:
+//                if(serverOverseer.checkDataBaseForLogin(msg.getDictionary().get("login")))
+//                    serverOverseer.addNewClient(msgSender);
+                break;
+            case LOG_IN:
+
+                break;
+            case LOG_OUT:
+                // close connection with that client
+                //serverOverseer.get
+
+                break;
+            case SET_BET:
+
+                break;
+            default:
+                break;
+        }
     }
 
     //Use this to change currentGameState in PhaseTimer
