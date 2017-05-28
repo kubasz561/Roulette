@@ -23,7 +23,7 @@ public class ServerGameLogic
 
     public void handleMessage(JSONMessage msg, Client msgSender)
     {
-        System.out.println(msg.getRawJSONString());
+        System.out.println("CLIENT_" + msgSender.clientId + ": "+ msg.getRawJSONString());
         switch(msg.getMsgType()){
             case SIGN_UP:
 //                if(serverOverseer.checkDataBaseForLogin(msg.getDictionary().get("login")))

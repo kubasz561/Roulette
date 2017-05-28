@@ -18,6 +18,7 @@ public class BettingGUI extends JFrame{
     private JLabel resultLabel;
     private JLabel accountLabel;
     private JLabel pictureLabel;
+    private JLabel betResult;
 
 
     public BettingGUI() {
@@ -76,5 +77,24 @@ public class BettingGUI extends JFrame{
         if(result.equals("lose"))
             resultLabel.setText("You LOST...");
     }
+    public void setBetResult(MessageType type) {
+        switch (type) {
+            case BET_OK:
+                betResult.setText("BET OK");
+                break;
+            case BAD_SESSION_ID:
+                betResult.setText("WRONG SESSION");
+                break;
+            case BET_UNABLE:
+                betResult.setText("UNABLE TO BET, TRY AGAIN");
+                break;
+            default:
+                clearBetResult();
+                break;
+        }
+    }
 
+    public void clearBetResult() {
+        betResult.setText("");
+    }
 }

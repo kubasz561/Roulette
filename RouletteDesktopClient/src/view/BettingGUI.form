@@ -80,7 +80,7 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="c91cc" class="javax.swing.JLabel">
+      <component id="c91cc" class="javax.swing.JLabel" binding="betResult">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

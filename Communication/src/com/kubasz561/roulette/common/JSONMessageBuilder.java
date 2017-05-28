@@ -35,7 +35,7 @@ public class JSONMessageBuilder implements Serializable{
         String rawStringJSON = typeToStringTemplateMap.get(msgType);
         //TODO: Sprawdzić czy to poniżej normalnie sformatuje stringa z róznymi parametrami
         rawStringJSON ="{" + MessageFormat.format(rawStringJSON, dataForJSON) + "}";
-        System.out.println(rawStringJSON);
+        System.out.println("CLIENT: " + rawStringJSON);
         return new JSONMessage(rawStringJSON, msgType);
     }
 

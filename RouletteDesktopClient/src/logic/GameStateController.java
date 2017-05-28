@@ -79,7 +79,7 @@ public class GameStateController {
 
 
     public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
-        System.out.print(msg.rawJSONString);
+        System.out.println("SERVER: " + msg.rawJSONString);
         switch(msg.getMsgType()){
             case SIGN_UP_OK:
                 this.clientLogin = connectGUI.getLogin();
@@ -94,12 +94,12 @@ public class GameStateController {
                 break;
 
             case LOGIN_DUPLICATE:
-                // tego chyba wgl nie bedzie skoro jesli logowanie i rejestracja tak samo działaja
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "User with given login already exists");
                 break;
 
             case BET_OK:
-                // tu coś w widoku trzeba będzie pokazać
-               // bettingGUI.set
+                bettingGUI.setBetResult(MessageType.BET_OK);
                 break;
             case WRONG_PASS:
                 JOptionPane.showMessageDialog(bettingGUI,
@@ -112,23 +112,31 @@ public class GameStateController {
                 break;
             case BET_UNABLE:
                 bettingGUI.unlockBettingGUI();
+                bettingGUI.setBetResult(MessageType.BET_UNABLE);
                 JOptionPane.showMessageDialog(bettingGUI,
                         "Unable to bet.");
                 break;
+            case BAD_SESSION_ID:
+                bettingGUI.unlockBettingGUI();
+                bettingGUI.setBetResult(MessageType.BAD_SESSION_ID);
+                break;
             case TIMESTAMP_TO_BET:
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_BET);
+                bettingGUI.clearBetResult();
                 bettingGUI.unlockBettingGUI();
                 bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 //odblokować wpisywanie wartosci betu i przycisk betowania
                 break;
             case TIMESTAMP_TO_RESULT:
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_RESULT);
+                bettingGUI.clearBetResult();
                 bettingGUI.setResultLabel(msg.getDictionary().get("result"));
                 bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 //wyswietlić wynik losowania
                 break;
             case TIMESTAMP_TO_ROLL:
                 bettingGUI.lockBettingGUI();
+                bettingGUI.clearBetResult();
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_ROLL);
                 //zablokowac wpisywanie wartosci betu i przycisk betowania + Licznik
                 break;

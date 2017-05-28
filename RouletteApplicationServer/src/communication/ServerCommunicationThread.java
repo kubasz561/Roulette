@@ -67,7 +67,7 @@ public class ServerCommunicationThread extends Thread{
 
     public void sendMessage(JSONMessage msg) throws IOException
     {
-        if(serverOverseer.gameLogicMutex.availablePermits() == 0)
+        if(true) //GameLogicMutex tu był.
         {
             this.clientCommunicationSemaphore.acquireUninterruptibly();
             serverToClient.writeObject(msg);
