@@ -6,17 +6,19 @@ import com.kubasz561.roulette.common.JSONMessage;
  * Created by sackhorn on 20.05.17.
  */
 public class Client {
-    public ServerCommunicationThread clientComThread;
+    public ServerListeningThread clientToServerThread;
+    public ServerSendingThread serverToClientThread;
     public int clientId;
     public String clientLogin;
     public String passHash;
     public double accountBalance;
     public boolean authenticatedSuccesfully;
 
-    public Client(JSONMessage loginOrSignUpMsg, ServerCommunicationThread clientComThread)
+    public Client(JSONMessage loginOrSignUpMsg, ServerListeningThread clientToServerThread, ServerSendingThread serverToClientThread )
     {
-        this.clientComThread = clientComThread;
-        this.clientId = clientComThread.serverOverseer.clientList.size();
+        this.clientToServerThread = clientToServerThread;
+        this.serverToClientThread = serverToClientThread;
+        this.clientId = clientToServerThread.serverOverseer.clientList.size();
         authenticateClient(loginOrSignUpMsg);
         this.clientLogin = loginOrSignUpMsg.getDictionary().get("login");
         this.passHash = loginOrSignUpMsg.getDictionary().get("password");

@@ -61,42 +61,31 @@ public class ServerGameLogic
         phaseTimer.start();
     }
 
-    public void sendStateUpdateToClients(MessageType msgType)
+    public void sendStateUpdateToClients(MessageType msgType, long timestamp)
     {
+        String timestampString = Long.toString(timestamp);
 
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
                 for (Client client : serverOverseer.clientList) {
-                    //TODO: Build a message with a timestamp to next round and data about round
-                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT, "11:58:13","45","13 BLACK","1200");
-                    try {
-                        client.clientComThread.sendMessage(tmpMsg);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT, timestampString,"45","13_BLACK","1200");
+
+                    client.serverToClientThread.sendMessage(tmpMsg);
                 }
                 break;
 
             case TIMESTAMP_TO_BET:
                 for (Client client : serverOverseer.clientList) {
-                    //TODO: Build a message with a timestamp to next round and data about round
-                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, "12:22:47","45","1500");
-                    try {
-                        client.clientComThread.sendMessage(tmpMsg);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, timestampString,"45","1500");
+
+                    client.serverToClientThread.sendMessage(tmpMsg);
                 }
                 break;
             case TIMESTAMP_TO_ROLL:
                 for (Client client : serverOverseer.clientList) {
-                    //TODO: Build a message with a timestamp to next round and data about round
-                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, "21:57:05","30");
-                    try {
-                        client.clientComThread.sendMessage(tmpMsg);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, timestampString,"30");
+
+                    client.serverToClientThread.sendMessage(tmpMsg);
                 }
                 break;
             default:

@@ -1,12 +1,10 @@
 package communication;
 
-import game_logic.ServerGameLogic;
 import game_logic.ServerOverseer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 
 /**
@@ -29,9 +27,10 @@ public class ServerMain {
                 Socket newClientSocket = listener.accept();
                 System.out.println("New client connected");
                 serverOverseer.gameLogicMutex.acquireUninterruptibly();
-                ServerCommunicationThread newClient = new ServerCommunicationThread(newClientSocket);
+                ServerListeningThread newClient = new ServerListeningThread(newClientSocket);
                 if(newClient.authenticatedSuccessfully) {
                     newClient.start();
+                    newClient.serverToClientThread.start();
                     System.out.println("New client authenticated");
                 }
                 else
