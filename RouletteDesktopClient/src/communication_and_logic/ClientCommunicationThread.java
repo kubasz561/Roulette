@@ -39,21 +39,14 @@ public class ClientCommunicationThread extends Thread {
         Overseer mainOverseer = Overseer.getInstance();
         JSONMessage message;
 
-        try
-        {
-            while (mainOverseer.isRunningFlag)
-            {
-                if(mainOverseer.listenFlag)
-                {
-                        message = (JSONMessage) serverToClient.readObject();
-                        mainOverseer.comFlagSemaphore.acquireUninterruptibly();
-                        mainOverseer.listenFlag = false; //TODO: may not be necessary, leave it be for now
-                        mainOverseer.gameStateController.handleIncomingMessage(message);
-                        mainOverseer.listenFlag = true;//TODO: see previous TODO
-                        if(!mainOverseer.listenFlag)
-                            throw new IOException("listen flag turned off after handling of a message");
-                        mainOverseer.comFlagSemaphore.release();
-                }
+        try  {
+            while (mainOverseer.isRunningFlag){
+
+                message = (JSONMessage) serverToClient.readObject();
+                mainOverseer.comFlagSemaphore.acquireUninterruptibly();
+                mainOverseer.gameStateController.handleIncomingMessage(message);
+                mainOverseer.comFlagSemaphore.release();
+
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -67,10 +60,7 @@ public class ClientCommunicationThread extends Thread {
     }
 
     public void sendMessage(JSONMessage msg) throws InterruptedException, IOException {
-        if (!Overseer.getInstance().listenFlag)
             clientToServer.writeObject(msg);
-        else
-            throw new IOException("Listen Flag is set to true when trying to send message");
     }
 
     private void close_all(){

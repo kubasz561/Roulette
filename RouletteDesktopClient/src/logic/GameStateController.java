@@ -33,6 +33,7 @@ public class GameStateController {
 
     class SignUpActionListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
             connect(connectGUI.getHost(), connectGUI.getPort());
             JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.SIGN_UP,connectGUI.getLogin(), connectGUI.getPassword());
             try{
@@ -40,10 +41,12 @@ public class GameStateController {
             } catch (Exception e) {
                 e.printStackTrace(); //TODO: Handlowac tym glebiej
             }
+            mainOverseer.comFlagSemaphore.release();
         }
     }
     class LoginActionListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
             connect(connectGUI.getHost(), connectGUI.getPort());
             //tu trzeba walidację jakąś zrobić
             JSONMessage loginMsg = JSONMessageBuilder.create_message(MessageType.LOG_IN,connectGUI.getLogin(), connectGUI.getPassword());
@@ -52,10 +55,12 @@ public class GameStateController {
             } catch (Exception e) {
                 e.printStackTrace(); //TODO: Handlowac tym glebiej
             }
+            mainOverseer.comFlagSemaphore.release();
         }
     }
     class BetActionListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
             if(bettingGUI.getBetAmount().isEmpty())
                  return;
             if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
@@ -68,12 +73,12 @@ public class GameStateController {
             }
             bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
                                         // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
+            mainOverseer.comFlagSemaphore.release();
         }
     }
 
 
     public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
-
         System.out.print(msg.rawJSONString);
         switch(msg.getMsgType()){
             case SIGN_UP_OK:
@@ -94,7 +99,6 @@ public class GameStateController {
 
             case BET_OK:
                 // tu coś w widoku trzeba będzie pokazać
-                bettingGUI.unlockBettingGUI();
                // bettingGUI.set
                 break;
             case WRONG_PASS:
@@ -107,12 +111,14 @@ public class GameStateController {
                         "User blocked");
                 break;
             case BET_UNABLE:
+                bettingGUI.unlockBettingGUI();
                 JOptionPane.showMessageDialog(bettingGUI,
                         "Unable to bet.");
                 break;
             case TIMESTAMP_TO_BET:
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_BET);
                 bettingGUI.unlockBettingGUI();
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 //odblokować wpisywanie wartosci betu i przycisk betowania
                 break;
             case TIMESTAMP_TO_RESULT:
@@ -130,19 +136,13 @@ public class GameStateController {
                 break;
         }
     }
+
+    /**
+     *  Called only from GUI, semaphore acquire in listener
+     */
     public boolean sendMessage(JSONMessage msg) throws IOException, InterruptedException {
-        if(mainOverseer.comFlagSemaphore.tryAcquire())
-        {
-            mainOverseer.listenFlag = false;
             mainOverseer.communicationThread.sendMessage(msg);
-            mainOverseer.comFlagSemaphore.release();
             return true;
-        }
-        else
-        {
-            System.out.print("Communication socket was busy when trying to send a message");
-            return false;
-        }
     }
     public void connect(String host, int port){
         ClientCommunicationThread comThread = connectToServer(host, port);

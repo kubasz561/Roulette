@@ -33,8 +33,8 @@ public class ServerOverseer {
     {
         clientsNmbr++;
         clientList.add(client);
-        //if(clientsNmbr==1)
-            //serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
+        if(clientsNmbr==1)
+            serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
     }
 
 }

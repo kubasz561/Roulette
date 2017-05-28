@@ -11,11 +11,9 @@ public class Overseer {
     private static Overseer Instance;
 
     public boolean isRunningFlag = true;
-    public boolean listenFlag = true; //TODO: The listenFlag May not be necessary since we are using semaphores but i will let i stay for now
     public Semaphore comFlagSemaphore = new Semaphore(1);
     public GameStateController gameStateController = new GameStateController(this);
     public ClientCommunicationThread communicationThread;
-    private ConnectGUI connectGUI;
 
     private Overseer(){
     }

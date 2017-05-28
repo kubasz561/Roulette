@@ -6,9 +6,9 @@ package game_logic;
  */
 public class PhaseTimer extends Thread{
     private ServerOverseer serverOverseer = ServerOverseer.getInstance();
-    private long bettingTime = 4500000;//TODO: jakieś randowowe wartości to są pobierać resztę z configa z bazki
-    private long rollinTime = 4500000;
-    private long resultsTime = 4500000;
+    private long bettingTime = 4500;//TODO: jakieś randowowe wartości to są pobierać resztę z configa z bazki
+    private long rollinTime = 4500;
+    private long resultsTime = 4500;
 
 
     @Override
@@ -18,16 +18,15 @@ public class PhaseTimer extends Thread{
         {
             while(serverOverseer.isRunning)
             {
-                wait(bettingTime); // oczekiwanie po wejściu pierwszego klienta
                 serverOverseer.serverGameLogic.changeGameState(GameState.BETTING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients();
-                wait(bettingTime);
+                sleep(bettingTime);
                 serverOverseer.serverGameLogic.changeGameState(GameState.ROLLING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients();
-                wait(rollinTime);
+                sleep(rollinTime);
                 serverOverseer.serverGameLogic.changeGameState(GameState.RESULTS);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients();
-                wait(resultsTime);
+                sleep(resultsTime);
             }
         }
         catch (InterruptedException e)

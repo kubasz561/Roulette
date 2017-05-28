@@ -50,6 +50,7 @@ public class ServerGameLogic
     {
 
         serverOverseer.gameLogicMutex.acquireUninterruptibly();
+        System.out.println(state.toString());
         currentGameState = state;
         serverOverseer.gameLogicMutex.release();
     }
