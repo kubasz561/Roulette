@@ -149,18 +149,10 @@ public class GameStateController {
      *  Called only from GUI, semaphore acquire in listener
      */
     public boolean sendMessage(JSONMessage msg) throws IOException, InterruptedException {
-    {
-        if(mainOverseer.comFlagSemaphore.tryAcquire())
-        {
+
             mainOverseer.communicationThread.sendMessage(msg);
-            mainOverseer.comFlagSemaphore.release();
             return true;
-        }
-        else
-        {
-            System.out.print("Communication socket was busy when trying to send a message");
-            return false;
-        }
+
     }
     public void connect(String host, int port){
         ClientCommunicationThread comThread = connectToServer(host, port);
