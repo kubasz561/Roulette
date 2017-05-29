@@ -11,11 +11,10 @@ import java.util.concurrent.Semaphore;
 public class ServerCommunicationThread extends Thread{
     private Socket socket;
     private ObjectInputStream clientToServer;
-    private ObjectOutputStream serverToClient;
     private Semaphore clientCommunicationSemaphore = new Semaphore(1);
     public ServerOverseer serverOverseer = ServerOverseer.getInstance();
     public boolean authenticatedSuccessfully = false;
-    public Client thisComThreadClient;
+    public Client thisThreadsClient;
 
     public ServerCommunicationThread(Socket clientSocket)
     {
@@ -23,20 +22,22 @@ public class ServerCommunicationThread extends Thread{
         {
             socket = clientSocket;
             clientToServer = new ObjectInputStream(clientSocket.getInputStream());
-            serverToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-            Client connectedClient = new Client((JSONMessage)clientToServer.readObject(), this);
-            thisComThreadClient = connectedClient;
+            ObjectOutputStream serverToClient = new ObjectOutputStream(clientSocket.getOutputStream());
+            ClientSenderThread clientSenderThread = new ClientSenderThread(serverToClient);
+            clientSenderThread.start();
+            Client connectedClient = new Client((JSONMessage)clientToServer.readObject(), this, clientSenderThread.outgoingQueue);
+            thisThreadsClient = connectedClient;
             authenticatedSuccessfully = connectedClient.authenticatedSuccesfully;
             if(authenticatedSuccessfully)
             {
                 serverOverseer.addNewClient(connectedClient);
-                sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK,null));
+                thisThreadsClient.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK,null));
                 //sendMessage(serverOverseer.gameStateController.currentStateMessage) //TODO: send user JSONMessage describing game state
             }
         }
         catch (IOException | ClassNotFoundException e)
         {
-            closeConnection();
+            closeIncomingStream();
             e.printStackTrace();
         }
     }
@@ -51,7 +52,7 @@ public class ServerCommunicationThread extends Thread{
                     JSONMessage msg = (JSONMessage)clientToServer.readObject();
                     this.clientCommunicationSemaphore.acquireUninterruptibly();
                     serverOverseer.gameLogicMutex.acquireUninterruptibly();
-                    serverOverseer.serverGameLogic.handleMessage(msg, thisComThreadClient);
+                    serverOverseer.serverGameLogic.handleMessage(msg, thisThreadsClient);
                     serverOverseer.gameLogicMutex.release();
                     this.clientCommunicationSemaphore.release();
             }
@@ -61,27 +62,13 @@ public class ServerCommunicationThread extends Thread{
             e.printStackTrace();
         }
         finally {
-            closeConnection();
+            closeIncomingStream();
         }
     }
 
-    public void sendMessage(JSONMessage msg) throws IOException
-    {
-        if(serverOverseer.gameLogicMutex.availablePermits() == 0)
-        {
-            this.clientCommunicationSemaphore.acquireUninterruptibly();
-            serverToClient.writeObject(msg);
-            this.clientCommunicationSemaphore.release();
-        }
-        else
-            throw new IOException("Not able to send a message because of missing mutexLock");
-    }
-
-
-    private void closeConnection() {
+    private void closeIncomingStream() {
         try
         {
-            serverToClient.close();
             clientToServer.close();
             socket.close();
             System.out.println("Disconnecting client successful");

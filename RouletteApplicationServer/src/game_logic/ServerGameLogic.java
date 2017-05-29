@@ -43,17 +43,8 @@ public class ServerGameLogic
 
     public void sendStateUpdateToClients()
     {
-        for(Client client: serverOverseer.clientList)
-        {
             //TODO: Build a message with a timestamp to next round and data about round
-            JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,"Kaczka");
-            try {
-                client.clientComThread.sendMessage(tmpMsg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
+            JSONMessage msg = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,"Kaczka");
+            serverOverseer.sendMessageToAll(msg);
     }
 }

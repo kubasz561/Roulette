@@ -1,5 +1,6 @@
 package game_logic;
 
+import com.kubasz561.roulette.common.JSONMessage;
 import communication.Client;
 
 import java.util.ArrayList;
@@ -28,8 +29,16 @@ public class ServerOverseer {
     {
         clientsNmbr++;
         clientList.add(client);
-        //if(clientsNmbr==1)
-            //serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
+//        if(clientsNmbr==1)
+//            serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
+    }
+
+    public void sendMessageToAll(JSONMessage msg)
+    {
+        for(Client client : clientList)
+        {
+            client.sendMessage(msg);
+        }
     }
 
 }

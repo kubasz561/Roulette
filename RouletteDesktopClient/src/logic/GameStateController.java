@@ -29,7 +29,6 @@ public class GameStateController {
     {
         if(mainOverseer.comFlagSemaphore.tryAcquire())
         {
-            mainOverseer.listenFlag = false;
             mainOverseer.communicationThread.sendMessage(msg);
             mainOverseer.comFlagSemaphore.release();
             return true;

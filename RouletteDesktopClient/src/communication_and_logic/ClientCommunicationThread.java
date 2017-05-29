@@ -33,7 +33,6 @@ public class ClientCommunicationThread extends Thread {
     //TODO:New Constructor that doesn't log in but signs up
 
 
-
     @Override
     public void run() {
         Overseer mainOverseer = Overseer.getInstance();
@@ -43,22 +42,15 @@ public class ClientCommunicationThread extends Thread {
         {
             while (mainOverseer.isRunningFlag)
             {
-                if(mainOverseer.listenFlag)
-                {
-                        message = (JSONMessage) serverToClient.readObject();
-                        mainOverseer.comFlagSemaphore.acquireUninterruptibly();
-                        mainOverseer.listenFlag = false; //TODO: may not be necessary, leave it be for now
-                        mainOverseer.gameStateController.handleIncomingMessage(message);
-                        mainOverseer.listenFlag = true;//TODO: see previous TODO
-                        if(!mainOverseer.listenFlag)
-                            throw new IOException("listen flag turned off after handling of a message");
-                        mainOverseer.comFlagSemaphore.release();
-                }
+                message = (JSONMessage) serverToClient.readObject();
+                mainOverseer.comFlagSemaphore.acquireUninterruptibly();
+                mainOverseer.gameStateController.handleIncomingMessage(message);
+                mainOverseer.comFlagSemaphore.release();
             }
-        } catch (IOException e){
-            e.printStackTrace();
-            System.out.println("Error while communicating closing");
         } catch (ClassNotFoundException | InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Server disconnected closing all connections");
             e.printStackTrace();
         }
         finally {
@@ -67,10 +59,7 @@ public class ClientCommunicationThread extends Thread {
     }
 
     public void sendMessage(JSONMessage msg) throws InterruptedException, IOException {
-        if (!Overseer.getInstance().listenFlag)
             clientToServer.writeObject(msg);
-        else
-            throw new IOException("Listen Flag is set to true when trying to send message");
     }
 
     private void close_all(){
@@ -78,8 +67,9 @@ public class ClientCommunicationThread extends Thread {
             serverToClient.close();
             clientToServer.close();
             clientSocket.close();
+            System.out.println("Succesfully closed all connections");
         }catch (IOException e){
-            System.out.println("Close unsuccesfull");
+            System.out.println("Closing connections unsuccesfull");
             e.printStackTrace();
         }
     }
