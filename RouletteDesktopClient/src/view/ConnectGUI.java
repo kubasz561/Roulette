@@ -1,37 +1,45 @@
 package view;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by HP on 2017-05-23.
+ * Connect view
  */
-public class ConnectGUI {
-    private JTextField textField1;
-    private JTextField textField2;
-    private JButton connectButton;
+public class ConnectGUI extends JFrame{
+    private JTextField hostField;
+    private JTextField portField;
+    private JButton loginButton;
     private JPanel panel;
+    private JPasswordField passwordField;
+    private JButton signupButton;
+    private JTextField loginField;
 
     public ConnectGUI() {
+        this.setContentPane(panel);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
     }
-
-    public JFrame init(){
-        JFrame frame = new JFrame("Connect");
-        frame.setContentPane(panel);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        return frame;
+    public void addLoginActionListener(ActionListener actionListener){
+        loginButton.addActionListener(actionListener);
     }
-    public void addActionListener(ActionListener actionListener){
-        connectButton.addActionListener(actionListener);
+    public void addSignUpActionListener(ActionListener actionListener){
+        signupButton.addActionListener(actionListener);
     }
     public String getHost(){
-        return textField1.getText();
+        return hostField.getText();
     }
     public int getPort(){
-        return Integer.parseInt(textField2.getText());
+        return Integer.parseInt(portField.getText());
     }
-
+    public String getLogin(){
+        return loginField.getText();
+    }
+    public String getPassword(){
+        return passwordField.getText();
+    }
+    public void clearPassword(){
+        passwordField.setText("");
+    }
 }

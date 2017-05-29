@@ -24,13 +24,18 @@ public class ServerOverseer {
             Instance = new ServerOverseer();
         return Instance;
     }
+    public void deleteClientFromList(Client clientToFind){
+        for(Client client : clientList)
+            if(client.equals(clientToFind))
+                return;/// tu zrobić usunięcie z listy??? czy coś podobnego
 
+    }
     public void addNewClient(Client client)
     {
         clientsNmbr++;
         clientList.add(client);
-//        if(clientsNmbr==1)
-//            serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
+        if(clientsNmbr==1)
+            serverGameLogic.phaseTimer(); //Starting the betting round fix this up and uncomment
     }
 
     public void sendMessageToAll(JSONMessage msg)
