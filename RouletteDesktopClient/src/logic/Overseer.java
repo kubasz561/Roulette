@@ -1,7 +1,7 @@
 package logic;
 
-import communication_and_logic.ClientCommunicationThread;
-import view.ConnectGUI;
+import communication_and_logic.CommunicationManager;
+
 import java.util.concurrent.Semaphore;
 
 /**
@@ -10,10 +10,10 @@ import java.util.concurrent.Semaphore;
 public class Overseer {
     private static Overseer Instance;
 
-    public boolean isRunningFlag = true;
+    public boolean isRunning = true;
     public Semaphore comFlagSemaphore = new Semaphore(1);
     public GameStateController gameStateController = new GameStateController(this);
-    public ClientCommunicationThread communicationThread;
+    public CommunicationManager communicationThread = new CommunicationManager();
 
     private Overseer(){
     }

@@ -3,7 +3,6 @@ package logic;
 import com.kubasz561.roulette.common.JSONMessage;
 import com.kubasz561.roulette.common.JSONMessageBuilder;
 import com.kubasz561.roulette.common.MessageType;
-import communication_and_logic.ClientCommunicationThread;
 import view.BettingGUI;
 import view.ConnectGUI;
 
@@ -154,33 +153,18 @@ public class GameStateController {
             return true;
 
     }
+
     public void connect(String host, int port){
-        ClientCommunicationThread comThread = connectToServer(host, port);
-        mainOverseer.communicationThread = comThread;
-
-        assert comThread != null;
         try {
-          //  comThread.join();
+            mainOverseer.communicationThread.connect(host, port);
 
-        } catch (Exception e){
+        } catch (IOException e){
             e.printStackTrace();
         }
+        mainOverseer.communicationThread.start();
+
     }
-    private static ClientCommunicationThread connectToServer(String ip, int port) {
-        ClientCommunicationThread newCommunicationThread;
-        try
-        {
-            newCommunicationThread = new ClientCommunicationThread(ip,port);
-            newCommunicationThread.start();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            System.out.println("Unable to connect");
-            return null;
-        }
-        return newCommunicationThread;
-    }
+
     private void changeLogToGameFrame(){
         bettingGUI = new BettingGUI();
         bettingGUI.addBetActionListener(new BetActionListener());

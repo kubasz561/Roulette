@@ -26,10 +26,14 @@ public class JSONMessage implements Serializable{
     {
         rawJSONString = rawMessage;
         msgType = type;
-        parseJSONString(rawJSONString);
+        try{
+            parseJSONString(rawJSONString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void parseJSONString(String JSONtoParse){
+    private void parseJSONString(String JSONtoParse) throws Exception{
         String delims = "[ \\{ ' , : \\}]+";
         String[] tokens = JSONtoParse.split(delims);
         int i = 0;
@@ -76,8 +80,8 @@ public class JSONMessage implements Serializable{
                             dictionary.put("bet_list", tokens[i+1]);
                             break;
                         default:
-                            //wyjatrk
-                            break;
+                            break;//throw new Exception("Json invalid");
+
                     }
                 }
             }catch(ArrayIndexOutOfBoundsException e){

@@ -11,10 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by sackhorn on 29.05.17.
  */
-public class ClientSenderThread extends Thread {
+public class ServerSenderThread extends Thread {
     public ObjectOutputStream serverToClient;
     public BlockingQueue<JSONMessage> outgoingQueue;
-    ClientSenderThread(ObjectOutputStream serverToClient)
+    ServerSenderThread(ObjectOutputStream serverToClient)
     {
         this.serverToClient = serverToClient;
         this.outgoingQueue = new LinkedBlockingQueue<>();

@@ -23,9 +23,9 @@ public class ServerCommunicationThread extends Thread{
             socket = clientSocket;
             clientToServer = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream serverToClient = new ObjectOutputStream(clientSocket.getOutputStream());
-            ClientSenderThread clientSenderThread = new ClientSenderThread(serverToClient);
-            clientSenderThread.start();
-            Client connectedClient = new Client((JSONMessage)clientToServer.readObject(), this, clientSenderThread.outgoingQueue);
+            ServerSenderThread serverSenderThread = new ServerSenderThread(serverToClient);
+            serverSenderThread.start();
+            Client connectedClient = new Client((JSONMessage)clientToServer.readObject(), this, serverSenderThread.outgoingQueue);
             thisThreadsClient = connectedClient;
             authenticatedSuccessfully = connectedClient.authenticatedSuccesfully;
             if(authenticatedSuccessfully)

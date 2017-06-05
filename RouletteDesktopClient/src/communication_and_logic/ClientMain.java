@@ -11,6 +11,6 @@ public class ClientMain {
         System.out.println("Trying to connect");
 
         Overseer mainOverseer = Overseer.getInstance();
-
+       // mainOverseer.communicationThread.waitForIt();
     }
 }
