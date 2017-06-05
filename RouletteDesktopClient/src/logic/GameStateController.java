@@ -21,6 +21,7 @@ public class GameStateController {
     BettingGUI bettingGUI;
     String clientLogin;
     String clientPassword;
+    int sessionNuber;
 
     public GameStateController(Overseer overseer) {
         currentState = ClientStates.UNCONNECTED;
@@ -64,7 +65,7 @@ public class GameStateController {
                  return;
             if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
                 return;
-            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"GREEN" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"GREEN" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber) ,connectGUI.getPassword());
             try{
                 sendMessage(betMsg);
             } catch (Exception e) {
@@ -82,7 +83,7 @@ public class GameStateController {
                 return;
             if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
                 return;
-            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"RED" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"RED" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber) ,connectGUI.getPassword());
             try{
                 sendMessage(betMsg);
             } catch (Exception e) {
@@ -100,7 +101,7 @@ public class GameStateController {
                 return;
             if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
                 return;
-            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"BLACK" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"BLACK" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber) ,connectGUI.getPassword());
             try{
                 sendMessage(betMsg);
             } catch (Exception e) {
@@ -175,6 +176,7 @@ public class GameStateController {
                 bettingGUI.clearBetResult();
                 bettingGUI.unlockBettingGUI();
                 bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
+                sessionNuber = Integer.parseInt(msg.getDictionary().get("timestamp"));
                 //odblokować wpisywanie wartosci betu i przycisk betowania
                 break;
             case TIMESTAMP_TO_RESULT:
@@ -182,12 +184,14 @@ public class GameStateController {
                 bettingGUI.clearBetResult();
                 bettingGUI.setResultLabel(msg.getDictionary().get("result"));
                 bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance")); // nie wiem czemu tu nie wyciaga nic
+                sessionNuber = Integer.parseInt(msg.getDictionary().get("timestamp"));
                 //wyswietlić wynik losowania
                 break;
             case TIMESTAMP_TO_ROLL:
                 bettingGUI.lockBettingGUI();
                 bettingGUI.clearBetResult();
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_ROLL);
+                sessionNuber = Integer.parseInt(msg.getDictionary().get("timestamp"));
                 //zablokowac wpisywanie wartosci betu i przycisk betowania + Licznik
                 break;
             default:

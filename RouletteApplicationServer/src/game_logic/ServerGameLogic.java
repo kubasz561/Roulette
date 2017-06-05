@@ -16,12 +16,20 @@ public class ServerGameLogic
     public PhaseTimer phaseTimer;
     private GameState currentGameState = GameState.WAITING_FOR_PLAYERS;
     private ServerOverseer serverOverseer;
+    private RollResult currentResult;
+    private int roundNumber;
 
     public ServerGameLogic(ServerOverseer overseer)
     {
         serverOverseer = overseer;
     }
 
+    public void incrementRoundNumber(){
+        roundNumber++;
+    }
+    public void setRoundNumber(int i){
+        roundNumber = i;
+    }
     public void handleMessage(JSONMessage msg, Client msgSender)
     {
         System.out.println("CLIENT_" + msgSender.clientId + ": "+ msg.getRawJSONString());
@@ -34,12 +42,28 @@ public class ServerGameLogic
 
                 break;
             case LOG_OUT:
-                serverOverseer.deleteClientFromList(msgSender);
                 JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);
-                serverOverseer.sendMessageToAll(tmpMsg);
+                msgSender.sendMessage(tmpMsg);
+                serverOverseer.deleteClientFromList(msgSender);
                 break;
             case SET_BET:
+                int betRound = Integer.parseInt(msg.getDictionary().get("session_number"));
+                if(currentGameState.equals(GameState.BETTING))
+                {
+                    if(betRound == roundNumber){
 
+                        //sprawdz na bazie
+                    }
+
+                }
+                else{
+                    JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.BET_UNABLE);
+                    msgSender.sendMessage(tmpMsg1);
+                }
+                //sprawdz czy stan mozna obstawiac
+                //sprawdz czy numer sesji ok
+                // sprawdz w bazie czy w ystarczajaco tokenow
+                // przyjmij beta
                 break;
             default:
                 break;
@@ -68,15 +92,15 @@ public class ServerGameLogic
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
                 String result = rollRoulette().toString();
-                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT, "11:58:13","45",result,"1200");
+                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,"45",result,"1200");
                 serverOverseer.sendMessageToAll(tmpMsg1);
                 break;
             case TIMESTAMP_TO_BET:
-                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, "12:22:47","45","1500");
+                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, Integer.toString(roundNumber),"45","1500");
                 serverOverseer.sendMessageToAll(tmpMsg2);
                 break;
             case TIMESTAMP_TO_ROLL:
-                JSONMessage tmpMsg3 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, "21:57:05","30");
+                JSONMessage tmpMsg3 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, Integer.toString(roundNumber),"30");
                 serverOverseer.sendMessageToAll(tmpMsg3);
                 break;
             default:
@@ -93,7 +117,7 @@ public class ServerGameLogic
                 rouletteTab[i] = RollResult.RED;
         }
         Random rand = new Random();
-        int randVal = rand.nextInt(36);
+        int randVal = rand.nextInt(38);
         return rouletteTab[randVal];
 
     }

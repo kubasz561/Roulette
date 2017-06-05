@@ -16,10 +16,12 @@ public class PhaseTimer extends Thread{
     @Override
     public void run()
     {
+        serverOverseer.serverGameLogic.setRoundNumber(0);
         try
         {
             while(serverOverseer.isRunning)
             {
+                serverOverseer.serverGameLogic.incrementRoundNumber();
                 serverOverseer.serverGameLogic.changeGameState(GameState.BETTING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients(MessageType.TIMESTAMP_TO_BET);
                 sleep(bettingTime);
