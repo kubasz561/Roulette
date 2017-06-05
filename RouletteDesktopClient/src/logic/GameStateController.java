@@ -58,14 +58,14 @@ public class GameStateController {
             mainOverseer.comFlagSemaphore.release();
         }
     }
-    class BetActionListener implements ActionListener {
+    class BetGreenActionListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             mainOverseer.comFlagSemaphore.tryAcquire();
             if(bettingGUI.getBetAmount().isEmpty())
                  return;
             if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
                 return;
-            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"red" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"GREEN" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
             try{
                 sendMessage(betMsg);
             } catch (Exception e) {
@@ -76,7 +76,56 @@ public class GameStateController {
             mainOverseer.comFlagSemaphore.release();
         }
     }
-
+    class BetRedActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
+            if(bettingGUI.getBetAmount().isEmpty())
+                return;
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+                return;
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"RED" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            try{
+                sendMessage(betMsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
+            // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
+            mainOverseer.comFlagSemaphore.release();
+        }
+    }
+    class BetBlackActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
+            if(bettingGUI.getBetAmount().isEmpty())
+                return;
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+                return;
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,clientLogin,"BLACK" ,bettingGUI.getBetAmount(),"session1234" ,connectGUI.getPassword());
+            try{
+                sendMessage(betMsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
+            // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
+            mainOverseer.comFlagSemaphore.release();
+        }
+    }
+    class LogoutActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            mainOverseer.comFlagSemaphore.tryAcquire();
+            //logout
+            JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT);
+            try{
+                sendMessage(betMsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            changeGameToLogFrame(); //TODO to delete after receiving response from server
+            mainOverseer.comFlagSemaphore.release();
+        }
+    }
 
     public void handleIncomingMessage(JSONMessage msg) throws InterruptedException {
         System.out.println("SERVER: " + msg.rawJSONString);
@@ -93,9 +142,11 @@ public class GameStateController {
                 changeLogToGameFrame();
                 break;
 
-            case LOGIN_DUPLICATE:
-                JOptionPane.showMessageDialog(bettingGUI,
-                        "User with given login already exists");
+            case LOG_OUT_OK:
+
+                changeGameToLogFrame();
+                JOptionPane.showMessageDialog(connectGUI,
+                        "Log out successful");
                 break;
 
             case BET_OK:
@@ -183,7 +234,16 @@ public class GameStateController {
     }
     private void changeLogToGameFrame(){
         bettingGUI = new BettingGUI();
-        bettingGUI.addBetActionListener(new BetActionListener());
+        bettingGUI.addBetGreenActionListener(new BetGreenActionListener());
+        bettingGUI.addBetRedActionListener(new BetRedActionListener());
+        bettingGUI.addBetBlackActionListener(new BetBlackActionListener());
+        bettingGUI.addLogoutActionListener(new LogoutActionListener());
         connectGUI.setVisible(false);
+    }
+    private void changeGameToLogFrame(){
+        bettingGUI.setVisible(false);
+        connectGUI = new ConnectGUI();
+        connectGUI.addLoginActionListener(new LoginActionListener());
+        connectGUI.addSignUpActionListener(new SignUpActionListener());
     }
 }
