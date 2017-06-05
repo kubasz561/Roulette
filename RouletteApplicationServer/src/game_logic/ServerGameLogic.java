@@ -93,7 +93,7 @@ public class ServerGameLogic
                 rouletteTab[i] = RollResult.RED;
         }
         Random rand = new Random();
-        int randVal = rand.nextInt(38);
+        int randVal = rand.nextInt(36);
         return rouletteTab[randVal];
 
     }
