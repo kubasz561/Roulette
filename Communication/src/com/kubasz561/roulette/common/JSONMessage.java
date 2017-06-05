@@ -80,7 +80,8 @@ public class JSONMessage implements Serializable{
                             dictionary.put("bet_list", tokens[i+1]);
                             break;
                         default:
-                            break;//throw new Exception("Json invalid");
+                            System.out.println("BAD TOKEN: " + tokens[i]);
+                            throw new Exception("Json invalid");
 
                     }
                 }

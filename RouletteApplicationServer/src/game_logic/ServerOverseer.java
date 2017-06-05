@@ -24,15 +24,13 @@ public class ServerOverseer {
             Instance = new ServerOverseer();
         return Instance;
     }
+
     public void deleteClientFromList(Client clientToFind){
         //mutex na dostep do clientlist
-
-        for(int i = 0; i < clientList.size();i++)
-            if(clientList.get(i).equals(clientToFind))
-                clientList.remove(i);
-
-
+        if(clientList.removeIf(client -> client.equals(clientToFind)))
+            --clientsNmbr;
     }
+
     public void addNewClient(Client client)
     {//mutex tutaj na dostep do clientlist
         clientsNmbr++;
