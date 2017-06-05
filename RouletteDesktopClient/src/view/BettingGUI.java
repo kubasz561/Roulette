@@ -4,14 +4,13 @@ import com.kubasz561.roulette.common.MessageType;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.awt.font.ImageGraphicAttribute;
 
 /**
  * Betting GUI
  */
 public class BettingGUI extends JFrame{
     private JPanel panel;
-    private JButton betButton;
+    private JButton betGreenButton;
     private JTextField betAmount;
     private JLabel enterTokensLabel;
     private JLabel gameStateInfo;
@@ -19,6 +18,9 @@ public class BettingGUI extends JFrame{
     private JLabel accountLabel;
     private JLabel pictureLabel;
     private JLabel betResult;
+    private JButton betBlackButton;
+    private JButton betRedButton;
+    private JButton logoutButton;
 
 
     public BettingGUI() {
@@ -26,13 +28,24 @@ public class BettingGUI extends JFrame{
         this.setName("Roulette");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.pack();
-        this.betButton.setEnabled(true);
+        this.betGreenButton.setEnabled(true);
         this.betAmount.setEnabled(true);
         this.setVisible(true);
     }
-    public void addBetActionListener(ActionListener actionListener){
-        betButton.addActionListener(actionListener);
+    public void addBetGreenActionListener(ActionListener actionListener){
+        betGreenButton.addActionListener(actionListener);
     }
+    public void addBetBlackActionListener(ActionListener actionListener){
+        betBlackButton.addActionListener(actionListener);
+    }
+    public void addBetRedActionListener(ActionListener actionListener){
+        betRedButton.addActionListener(actionListener);
+    }
+    public void addLogoutActionListener(ActionListener actionListener){
+        logoutButton.addActionListener(actionListener);
+    }
+
+
     public String getBetAmount(){
         return betAmount.getText();
     }
@@ -58,11 +71,15 @@ public class BettingGUI extends JFrame{
         }
     }
     public void lockBettingGUI(){
-        betButton.setEnabled(false);
+        betGreenButton.setEnabled(false);
+        betRedButton.setEnabled(false);
+        betBlackButton.setEnabled(false);
         betAmount.setEnabled(false);
     }
     public void unlockBettingGUI(){
-        betButton.setEnabled(true);
+        betGreenButton.setEnabled(true);
+        betRedButton.setEnabled(true);
+        betBlackButton.setEnabled(true);
         betAmount.setEnabled(true);
     }
     public int getAccountValue(){

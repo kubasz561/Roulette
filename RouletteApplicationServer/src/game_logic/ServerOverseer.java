@@ -26,9 +26,11 @@ public class ServerOverseer {
     }
     public void deleteClientFromList(Client clientToFind){
         //mutex na dostep do clientlist
-        for(Client client : clientList)
-            if(client.equals(clientToFind))
-                return;/// tu zrobić usunięcie z listy??? czy coś podobnego
+
+        for(int i = 0; i < clientList.size();i++)
+            if(clientList.get(i).equals(clientToFind))
+                clientList.remove(i);
+
 
     }
     public void addNewClient(Client client)

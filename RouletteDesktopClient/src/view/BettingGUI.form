@@ -8,20 +8,10 @@
     <properties>
       <background color="-11313274"/>
       <foreground color="-12698050"/>
+      <toolTipText value=""/>
     </properties>
     <border type="none"/>
     <children>
-      <component id="e224" class="javax.swing.JButton" binding="betButton">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-13076653"/>
-          <enabled value="true"/>
-          <foreground color="-9995077"/>
-          <text value="BET"/>
-        </properties>
-      </component>
       <component id="ab6d3" class="javax.swing.JTextField" binding="betAmount">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -29,7 +19,7 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-4935760"/>
+          <background color="-1250844"/>
           <enabled value="false"/>
         </properties>
       </component>
@@ -49,15 +39,6 @@
         <properties>
           <font name="MV Boli" size="22" style="1"/>
           <text value="1000"/>
-        </properties>
-      </component>
-      <component id="9bbd8" class="javax.swing.JLabel" binding="gameStateInfo">
-        <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <font name="MV Boli" size="26" style="1"/>
-          <text value="Opis stanu gry"/>
         </properties>
       </component>
       <component id="af415" class="javax.swing.JLabel" binding="enterTokensLabel">
@@ -86,6 +67,54 @@
         </constraints>
         <properties>
           <text value="Label"/>
+        </properties>
+      </component>
+      <component id="e224" class="javax.swing.JButton" binding="betGreenButton">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-13076653"/>
+          <enabled value="true"/>
+          <foreground color="-14808804"/>
+          <text value="BET GREEN"/>
+        </properties>
+      </component>
+      <component id="31a7b" class="javax.swing.JButton" binding="betBlackButton">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-15263204"/>
+          <foreground color="-1251861"/>
+          <text value="BET BLACK"/>
+        </properties>
+      </component>
+      <component id="27815" class="javax.swing.JButton" binding="betRedButton">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-5503725"/>
+          <foreground color="-14809594"/>
+          <text value="BET RED"/>
+        </properties>
+      </component>
+      <component id="aac0a" class="javax.swing.JButton" binding="logoutButton">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Logout"/>
+        </properties>
+      </component>
+      <component id="9bbd8" class="javax.swing.JLabel" binding="gameStateInfo">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="MV Boli" size="26" style="1"/>
+          <text value=""/>
         </properties>
       </component>
     </children>

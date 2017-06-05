@@ -9,6 +9,7 @@ public enum MessageType {
     WRONG_PASS,
     BLOCKED,
     LOG_OUT,
+    LOG_OUT_OK,
     SET_BET,
     BET_OK,
     BAD_SESSION_ID,

@@ -6,6 +6,7 @@ import com.kubasz561.roulette.common.MessageType;
 import communication.Client;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * Created by sackhorn on 20.05.17.
@@ -33,9 +34,9 @@ public class ServerGameLogic
 
                 break;
             case LOG_OUT:
-                // close connection with that client
-                //serverOverseer.get
-
+                serverOverseer.deleteClientFromList(msgSender);
+                JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);
+                serverOverseer.sendMessageToAll(tmpMsg);
                 break;
             case SET_BET:
 
@@ -66,7 +67,8 @@ public class ServerGameLogic
 
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
-                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT, "11:58:13","45","13_BLACK","1200");
+                String result = rollRoulette().toString();
+                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT, "11:58:13","45",result,"1200");
                 serverOverseer.sendMessageToAll(tmpMsg1);
                 break;
             case TIMESTAMP_TO_BET:
@@ -80,5 +82,19 @@ public class ServerGameLogic
             default:
                 break;
         }
+    }
+    public RollResult rollRoulette(){
+        RollResult[] rouletteTab = new RollResult[37];
+        rouletteTab[0] = RollResult.GREEN;
+        for(int i = 1; i<rouletteTab.length;i++){
+            if(i % 2 == 0)
+                rouletteTab[i] = RollResult.BLACK;
+            else
+                rouletteTab[i] = RollResult.RED;
+        }
+        Random rand = new Random();
+        int randVal = rand.nextInt(38);
+        return rouletteTab[randVal];
+
     }
 }
