@@ -16,6 +16,9 @@ import java.util.Map;
 
 //TODO: Opakować ładnie obiektowo jsona i metodki do niego do jakiegoś parsowania z raw_stringa do słownika Javowego
 public class JSONMessage implements Serializable{
+    //weryfikacja przy odbieraniu wiadomosci
+    //czytanie jsona bezposrednio ze streama i weryfikacja - biblioteka
+    //skad wiadomo ze json sie skonczyl w readobject
     public String rawJSONString;
     public MessageType msgType;
     private Map<String, String> dictionary = new HashMap<>();
@@ -73,6 +76,7 @@ public class JSONMessage implements Serializable{
                             dictionary.put("bet_list", tokens[i+1]);
                             break;
                         default:
+                            //wyjatrk
                             break;
                     }
                 }

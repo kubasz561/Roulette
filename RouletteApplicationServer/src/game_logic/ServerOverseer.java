@@ -25,13 +25,14 @@ public class ServerOverseer {
         return Instance;
     }
     public void deleteClientFromList(Client clientToFind){
+        //mutex na dostep do clientlist
         for(Client client : clientList)
             if(client.equals(clientToFind))
                 return;/// tu zrobić usunięcie z listy??? czy coś podobnego
 
     }
     public void addNewClient(Client client)
-    {
+    {//mutex tutaj na dostep do clientlist
         clientsNmbr++;
         clientList.add(client);
         if(clientsNmbr==1)
@@ -39,7 +40,7 @@ public class ServerOverseer {
     }
 
     public void sendMessageToAll(JSONMessage msg)
-    {
+    {//mutex tez na clientlist
         for(Client client : clientList)
         {
             client.sendMessage(msg);

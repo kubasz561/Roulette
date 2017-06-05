@@ -47,6 +47,9 @@ public class ClientSenderThread extends Thread {
         try
         {
             serverToClient.close();
+            //zamknac tez nasluchujacy
+            //najpierw wyrejestrowac potem zamknac kolejke
+            // potem close na socket
         }
         catch (IOException e)
         {
