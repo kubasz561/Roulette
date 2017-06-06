@@ -230,8 +230,6 @@ public class GameStateController {
     }
     private void changeGameToLogFrame(){
         bettingGUI.setVisible(false);
-        connectGUI = new ConnectGUI();
-        connectGUI.addLoginActionListener(new LoginActionListener());
-        connectGUI.addSignUpActionListener(new SignUpActionListener());
+        connectGUI.setVisible(true);
     }
 }

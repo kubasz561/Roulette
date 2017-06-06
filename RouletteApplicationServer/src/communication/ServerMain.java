@@ -28,13 +28,13 @@ public class ServerMain {
                 System.out.println("New client connected");
                 serverOverseer.gameLogicMutex.acquireUninterruptibly();
                 Client newClient2 = new Client(newClientSocket);
-                //ServerListeningThread newClient = new ServerListeningThread(newClientSocket);
+                /*//ServerListeningThread newClient = new ServerListeningThread(newClientSocket);
                 if(newClient.authenticatedSuccessfully) {
                     newClient.start();
                     System.out.println("New client authenticated");
                 }
                 else
-                    System.out.println("Client tried connecting but couldn't authenticate");
+                    System.out.println("Client tried connecting but couldn't authenticate");*/
                 serverOverseer.gameLogicMutex.release();
             }
 

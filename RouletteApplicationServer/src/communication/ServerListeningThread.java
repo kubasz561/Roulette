@@ -17,10 +17,11 @@ public class ServerListeningThread extends Thread{
     public Client thisThreadsClient;
     private CommunicationManagerServer communicationManagerServer;
 
-    public ServerListeningThread(ObjectInputStream stream, CommunicationManagerServer communicationManagerServer)
+    public ServerListeningThread(ObjectInputStream stream, CommunicationManagerServer communicationManagerServer, Client client)
     {
         clientToServer = stream;
         this.communicationManagerServer = communicationManagerServer;
+        thisThreadsClient = client;
     }
 
 

@@ -27,6 +27,7 @@ public class ServerOverseer {
 
     public void deleteClientFromList(Client clientToFind){
         //mutex na dostep do clientlist
+       // clientToFind.clientComThread.closeAll();
         if(clientList.removeIf(client -> client.equals(clientToFind)))
             --clientsNmbr;
     }

@@ -39,12 +39,10 @@ public class ServerGameLogic
 //                    serverOverseer.addNewClient(msgSender);
                 break;
             case LOG_IN:
-                msgSender.authenticateClient(msg);
-                if (msgSender.authenticatedSuccesfully){
+                MessageType loginMsg = msgSender.authenticateClient(msg);
+                if (msgSender.authenticatedSuccesfully)
                     serverOverseer.addNewClient(msgSender);
-                } else {
-
-                }
+                msgSender.sendMessage(JSONMessageBuilder.create_message(loginMsg));
                 break;
             case LOG_OUT:
                 JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);

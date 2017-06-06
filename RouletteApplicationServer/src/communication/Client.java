@@ -1,6 +1,7 @@
 package communication;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import com.kubasz561.roulette.common.MessageType;
 
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
@@ -18,15 +19,16 @@ public class Client {
 
 
     public Client(Socket newClientSocket){
-        this.clientComThread = new CommunicationManagerServer(newClientSocket);
-        authenticateClient(loginOrSignUpMsg);
+        clientComThread = new CommunicationManagerServer(newClientSocket, this);
+        clientComThread.start();
     }
 
-    public void authenticateClient(JSONMessage loginOrSignUpMsg)
+    public MessageType authenticateClient(JSONMessage loginOrSignUpMsg)
     {
         //TODO: Check if pass correct or if signup ok
         //TODO: Parse json message to fields of this class(login,password or password hash, account balance)
         authenticatedSuccesfully = true;
+        return MessageType.LOGIN_OK;
     }
 
     public void sendMessage(JSONMessage msg) {

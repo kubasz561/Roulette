@@ -16,9 +16,8 @@ public class CommunicationManagerServer {
     public ObjectOutputStream serverToClient;
     public ServerListeningThread listeningThread;
     public ServerSenderThread senderThread;
-    public Client thisThreadsClient;
 
-    public CommunicationManagerServer(Socket newClientSocket){
+    public CommunicationManagerServer(Socket newClientSocket, Client client){
         socket = newClientSocket;
         try {
             serverToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -27,7 +26,7 @@ public class CommunicationManagerServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        listeningThread = new ServerListeningThread(clientToServer, this);
+        listeningThread = new ServerListeningThread(clientToServer, this, client);
         senderThread = new ServerSenderThread(serverToClient, this);
     }
 
