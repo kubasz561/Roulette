@@ -14,10 +14,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ServerSenderThread extends Thread {
     public ObjectOutputStream serverToClient;
     public BlockingQueue<JSONMessage> outgoingQueue;
-    ServerSenderThread(ObjectOutputStream serverToClient)
+    private CommunicationManagerServer communicationManagerServer;
+
+    public ServerSenderThread(ObjectOutputStream serverToClient, CommunicationManagerServer communicationManagerServer)
     {
         this.serverToClient = serverToClient;
         this.outgoingQueue = new LinkedBlockingQueue<>();
+        this.communicationManagerServer = communicationManagerServer;
     }
 
     @Override
@@ -39,22 +42,8 @@ public class ServerSenderThread extends Thread {
         finally
         {
             System.out.println("Closing sender thread");
-            closeOutGoingStream();
+            communicationManagerServer.closeAll();
         }
     }
 
-    private void closeOutGoingStream() {
-        try
-        {
-            serverToClient.close();
-            //zamknac tez nasluchujacy
-            //najpierw wyrejestrowac potem zamknac kolejke
-            // potem close na socket
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            System.out.println("Couldn't close output stream");
-        }
-    }
 }
