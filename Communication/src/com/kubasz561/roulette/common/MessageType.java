@@ -12,6 +12,8 @@ public enum MessageType {
     LOG_OUT_OK,
     SET_BET,
     BET_OK,
+    BET_WON,
+    BET_LOST,
     BAD_SESSION_ID,
     BET_UNABLE,
     TIMESTAMP_TO_BET,

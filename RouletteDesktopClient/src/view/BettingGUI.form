@@ -28,8 +28,8 @@
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="MV Boli" size="22" style="1"/>
-          <text value="rezultaty "/>
+          <font name="MV Boli" size="36" style="1"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="519d2" class="javax.swing.JLabel" binding="accountLabel">
@@ -102,10 +102,13 @@
       </component>
       <component id="aac0a" class="javax.swing.JButton" binding="logoutButton">
         <constraints>
-          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <foreground color="-11491909"/>
           <text value="Logout"/>
+          <verticalAlignment value="0"/>
+          <verticalTextPosition value="0"/>
         </properties>
       </component>
       <component id="9bbd8" class="javax.swing.JLabel" binding="gameStateInfo">

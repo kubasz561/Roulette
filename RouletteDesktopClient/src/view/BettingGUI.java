@@ -3,6 +3,7 @@ package view;
 import com.kubasz561.roulette.common.MessageType;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
@@ -89,10 +90,20 @@ public class BettingGUI extends JFrame{
         accountLabel.setText(result);
     }
     public void setResultLabel(String result){
-        if(result.equals("win"))
-            resultLabel.setText("You WON");
-        if(result.equals("lose"))
-            resultLabel.setText("You LOST...");
+        if(result.equals("RED")){
+            resultLabel.setForeground(Color.red);
+            resultLabel.setText("RED");
+        }
+        if(result.equals("BLACK")){
+            resultLabel.setForeground(Color.black);
+            resultLabel.setText("BLACK");
+        }
+        if(result.equals("GREEN")){
+            resultLabel.setForeground(Color.green);
+            resultLabel.setText("GREEN");
+        }
+        if(result.equals(""))
+            resultLabel.setText("");
     }
     public void setBetResult(MessageType type) {
         switch (type) {

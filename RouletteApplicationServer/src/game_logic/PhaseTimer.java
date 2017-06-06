@@ -8,6 +8,7 @@ import com.kubasz561.roulette.common.MessageType;
  */
 public class PhaseTimer extends Thread{
     private ServerOverseer serverOverseer = ServerOverseer.getInstance();
+
     private long bettingTime = 4500;//TODO: jakieś randowowe wartości to są pobierać resztę z configa z bazki
     private long rollinTime = 4500;
     private long resultsTime = 4500;
@@ -21,6 +22,7 @@ public class PhaseTimer extends Thread{
         {
             while(serverOverseer.isRunning && serverOverseer.clientsNmbr > 0)
             {
+                serverOverseer.resetBets();
                 serverOverseer.serverGameLogic.incrementRoundNumber();
                 serverOverseer.serverGameLogic.changeGameState(GameState.BETTING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients(MessageType.TIMESTAMP_TO_BET);
@@ -30,6 +32,7 @@ public class PhaseTimer extends Thread{
                 sleep(rollinTime);
                 serverOverseer.serverGameLogic.changeGameState(GameState.RESULTS);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients(MessageType.TIMESTAMP_TO_RESULT);
+                serverOverseer.checkIfClientsWonBet();
                 sleep(resultsTime);
             }
         }
@@ -40,5 +43,16 @@ public class PhaseTimer extends Thread{
         }
 
 
+    }
+    public long getBettingTime() {
+        return bettingTime;
+    }
+
+    public long getRollinTime() {
+        return rollinTime;
+    }
+
+    public long getResultsTime() {
+        return resultsTime;
     }
 }

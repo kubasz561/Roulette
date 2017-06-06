@@ -51,11 +51,13 @@ public class ServerGameLogic
                 break;
             case SET_BET:
                 int betRound = Integer.parseInt(msg.getDictionary().get("session_number"));
+                int betValue = Integer.parseInt(msg.getDictionary().get("value"));
+                String betColor = msg.getDictionary().get("bet");
                 if(currentGameState.equals(GameState.BETTING))
                 {
                     if(betRound == roundNumber){
 
-                        //sprawdz na bazie
+                        msgSender.setBet(betRound, betValue, betColor);
                     }
 
                 }
@@ -73,6 +75,13 @@ public class ServerGameLogic
         }
     }
 
+    public boolean checkIfBetWon(Client client){
+        if(client.getBet() != null){
+            if(client.getBet().getBetRound() == roundNumber && client.getBet().getBetColor().equals(currentResult))
+                return true;
+        }
+        return false;
+    }
     //Use this to change currentGameState in PhaseTimer
     public void changeGameState(GameState state)
     {
@@ -91,19 +100,25 @@ public class ServerGameLogic
 
     public void sendStateUpdateToClients(MessageType msgType)
     {
-
+        String account;
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
-                String result = rollRoulette().toString();
-                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,"45",result,"1200");
+                account = Integer.toString(2000); // pobranie z bazy
+                currentResult = rollRoulette();
+                String result = currentResult.toString();
+                String stateTimeResult = Long.toString(phaseTimer.getResultsTime());
+                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,stateTimeResult,result,account);
                 serverOverseer.sendMessageToAll(tmpMsg1);
                 break;
             case TIMESTAMP_TO_BET:
-                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, Integer.toString(roundNumber),"45","1500");
+                account = Integer.toString(2500); // pobranie z bazy
+                String stateTimeBet = Long.toString(phaseTimer.getBettingTime());
+                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, Integer.toString(roundNumber),stateTimeBet,account);
                 serverOverseer.sendMessageToAll(tmpMsg2);
                 break;
             case TIMESTAMP_TO_ROLL:
-                JSONMessage tmpMsg3 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, Integer.toString(roundNumber),"30");
+                String stateTimeRoll = Long.toString(phaseTimer.getRollinTime());
+                JSONMessage tmpMsg3 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_ROLL, Integer.toString(roundNumber),stateTimeRoll);
                 serverOverseer.sendMessageToAll(tmpMsg3);
                 break;
             default:

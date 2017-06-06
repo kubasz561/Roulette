@@ -1,6 +1,8 @@
 package communication;
 
 import com.kubasz561.roulette.common.JSONMessage;
+import game_logic.Bet;
+import game_logic.RollResult;
 import com.kubasz561.roulette.common.MessageType;
 
 import java.net.Socket;
@@ -16,6 +18,7 @@ public class Client {
     public double accountBalance;
     public BlockingQueue<JSONMessage> outgoingQueue;
     public boolean authenticatedSuccesfully;
+    private Bet currentBet;
 
 
     public Client(Socket newClientSocket){
@@ -35,5 +38,15 @@ public class Client {
 
             clientComThread.sendMessage(msg);
 
+    }
+
+    public void setBet(int round, int value, String color){
+       currentBet = new Bet(round, value, color);
+    }
+    public void clearBet(){
+      currentBet = null;
+    }
+    public Bet getBet(){
+        return currentBet;
     }
 }
