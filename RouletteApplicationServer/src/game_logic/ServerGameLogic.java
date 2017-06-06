@@ -73,7 +73,7 @@ public class ServerGameLogic
     }
 
     public boolean checkIfBetWon(Client client){
-        if(client.getBet().getBetRound() != 0){
+        if(client.getBet() != null){
             if(client.getBet().getBetRound() == roundNumber && client.getBet().getBetColor().equals(currentResult))
                 return true;
         }
@@ -101,7 +101,8 @@ public class ServerGameLogic
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
                 account = Integer.toString(2000); // pobranie z bazy
-                String result = rollRoulette().toString();
+                currentResult = rollRoulette();
+                String result = currentResult.toString();
                 String stateTimeResult = Long.toString(phaseTimer.getResultsTime());
                 JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,stateTimeResult,result,account);
                 serverOverseer.sendMessageToAll(tmpMsg1);

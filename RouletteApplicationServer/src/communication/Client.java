@@ -44,20 +44,12 @@ public class Client {
             System.out.println("Couldn't put message into outgoing queue");
         }
     }
+
     public void setBet(int round, int value, String color){
-        currentBet.setBetRound(round);
-        currentBet.setBetValue(value);
-        if(color.equals("RED"))
-            currentBet.setBetColor(RollResult.RED);
-        if(color.equals("BLACK"))
-            currentBet.setBetColor(RollResult.BLACK);
-        if(color.equals("GREEN"))
-            currentBet.setBetColor(RollResult.GREEN);
+       currentBet = new Bet(round, value, color);
     }
     public void clearBet(){
-        currentBet.setBetColor(null);
-        currentBet.setBetRound(0);
-        currentBet.setBetValue(0);
+      currentBet = null;
     }
     public Bet getBet(){
         return currentBet;

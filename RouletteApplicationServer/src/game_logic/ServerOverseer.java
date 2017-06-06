@@ -68,5 +68,11 @@ public class ServerOverseer {
             }
         }
     }
+    public void resetBets(){
+        for(Client client : clientList)
+        {
+            client.clearBet();
+        }
+    }
 
 }
