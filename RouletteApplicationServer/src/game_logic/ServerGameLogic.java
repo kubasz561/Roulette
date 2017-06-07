@@ -8,6 +8,9 @@ import communication.Client;
 import java.io.IOException;
 import java.util.Random;
 
+import static com.kubasz561.roulette.common.MessageType.BET_LOST;
+import static com.kubasz561.roulette.common.MessageType.BET_WON;
+
 /**
  * Created by sackhorn on 20.05.17.
  */
@@ -44,7 +47,7 @@ public class ServerGameLogic
                 }
                 else {
                     if(serverOverseer.databaseClient.createUser(newLogin, newPassword)){
-                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK));
+                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK, Integer.toString(serverOverseer.databaseClient.getClientAccount(msgSender))));
                         msgSender.authenticatedSuccesfully = true;
                         serverOverseer.addNewClient(msgSender);
                     }
@@ -66,7 +69,7 @@ public class ServerGameLogic
                 else if ( searchUserResult2.getPassword().equals(password) ){
                     msgSender.authenticatedSuccesfully = true;
                     serverOverseer.addNewClient(msgSender);
-                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_OK));
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_OK, Integer.toString(serverOverseer.databaseClient.getClientAccount(msgSender))));
                 }
                 else {
                     msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.WRONG_PASS));
@@ -104,6 +107,36 @@ public class ServerGameLogic
             default:
                 break;
         }
+    }
+    public void checkIfClientsWonBet() {
+        for (Client client : serverOverseer.clientList) {
+            if (client.getBet() != null) {
+                if (client.getBet().getBetRound() != 0) {
+                    if (checkIfBetWon(client)) {
+                        serverOverseer.databaseClient.updateClientAccount(client, getBetMultiplier()*client.getBet().getBetValue());
+                        JSONMessage betWon = JSONMessageBuilder.create_message(BET_WON, Integer.toString(serverOverseer.databaseClient.getClientAccount(client)));
+                        client.sendMessage(betWon);
+                    } else {
+                        serverOverseer.databaseClient.updateClientAccount(client, -getBetMultiplier()*client.getBet().getBetValue());
+                        JSONMessage betLost = JSONMessageBuilder.create_message(BET_LOST , Integer.toString(serverOverseer.databaseClient.getClientAccount(client)));
+                        client.sendMessage(betLost);
+                    }
+                }
+            }
+        }
+    }
+    public void resetBets(){
+        for(Client client : serverOverseer.clientList)
+        {
+            client.clearBet();
+        }
+    }
+    public int getBetMultiplier(){
+        if(currentResult.equals(RollResult.RED) || currentResult.equals(RollResult.BLACK))
+            return 1;
+        if(currentResult.equals(RollResult.GREEN))
+            return 13;
+        return 0;
     }
 
     public boolean checkIfBetWon(Client client){

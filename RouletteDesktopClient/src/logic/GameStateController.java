@@ -71,6 +71,7 @@ public class GameStateController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            bettingGUI.setAccountLabel(Integer.toString(bettingGUI.getAccountValue() - Integer.parseInt(bettingGUI.getBetAmount())));
             bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
                                         // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
             mainOverseer.comFlagSemaphore.release();
@@ -89,6 +90,7 @@ public class GameStateController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            bettingGUI.setAccountLabel(Integer.toString(bettingGUI.getAccountValue() - Integer.parseInt(bettingGUI.getBetAmount())));
             bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
             // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
             mainOverseer.comFlagSemaphore.release();
@@ -107,6 +109,7 @@ public class GameStateController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            bettingGUI.setAccountLabel(Integer.toString(bettingGUI.getAccountValue() - Integer.parseInt(bettingGUI.getBetAmount())));
             bettingGUI.lockBettingGUI(); // lockuje przycisk do betowania az nie ..
             // dostaniemy odpowiedzi czy bet ok, zeby nie slac bez sensu duzo komunikatow
             mainOverseer.comFlagSemaphore.release();
@@ -134,12 +137,14 @@ public class GameStateController {
                 this.clientLogin = connectGUI.getLogin();
                 this.clientPassword = connectGUI.getPassword();
                 changeLogToGameFrame();
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 break;
 
             case LOGIN_OK:
                 this.clientLogin = connectGUI.getLogin();
                 this.clientPassword = connectGUI.getPassword();
                 changeLogToGameFrame();
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 break;
             case LOGIN_INVALID:
                 JOptionPane.showMessageDialog(bettingGUI,
@@ -159,10 +164,12 @@ public class GameStateController {
                 break;
 
             case BET_WON:
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 JOptionPane.showMessageDialog(bettingGUI,
                         "You won the bet");
                 break;
             case BET_LOST:
+                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 JOptionPane.showMessageDialog(bettingGUI,
                         "You lost the bet");
                 break;
@@ -192,7 +199,7 @@ public class GameStateController {
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_BET);
                 bettingGUI.clearBetResult();
                 bettingGUI.unlockBettingGUI();
-                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
+                //bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance"));
                 sessionNuber = Integer.parseInt(msg.getDictionary().get("timestamp"));
                 bettingGUI.setResultLabel("");
                 //odblokować wpisywanie wartosci betu i przycisk betowania
@@ -201,7 +208,7 @@ public class GameStateController {
                 bettingGUI.setGameStateInfoLabel(MessageType.TIMESTAMP_TO_RESULT);
                 bettingGUI.clearBetResult();
                 bettingGUI.setResultLabel(msg.getDictionary().get("result"));
-                bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance")); // nie wiem czemu tu nie wyciaga nic
+                //bettingGUI.setAccountLabel(msg.getDictionary().get("account_balance")); // nie wiem czemu tu nie wyciaga nic
                 sessionNuber = Integer.parseInt(msg.getDictionary().get("timestamp"));
                 //wyswietlić wynik losowania
                 break;

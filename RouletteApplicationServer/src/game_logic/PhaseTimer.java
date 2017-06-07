@@ -22,7 +22,7 @@ public class PhaseTimer extends Thread{
         {
             while(serverOverseer.isRunning && serverOverseer.clientsNmbr > 0)
             {
-                serverOverseer.resetBets();
+                serverOverseer.serverGameLogic.resetBets();
                 serverOverseer.serverGameLogic.incrementRoundNumber();
                 serverOverseer.serverGameLogic.changeGameState(GameState.BETTING);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients(MessageType.TIMESTAMP_TO_BET);
@@ -32,7 +32,7 @@ public class PhaseTimer extends Thread{
                 sleep(rollinTime);
                 serverOverseer.serverGameLogic.changeGameState(GameState.RESULTS);
                 serverOverseer.serverGameLogic.sendStateUpdateToClients(MessageType.TIMESTAMP_TO_RESULT);
-                serverOverseer.checkIfClientsWonBet();
+                serverOverseer.serverGameLogic.checkIfClientsWonBet();
                 sleep(resultsTime);
             }
         }

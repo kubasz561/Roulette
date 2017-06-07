@@ -23,7 +23,7 @@ public class DatabaseClient {
     public int getClientAccount(Client client){
       return 2000;
     }
-    public boolean updateClientAccount(Client client){
+    public boolean updateClientAccount(Client client, int value){
         return true;
     }
 

@@ -52,27 +52,4 @@ public class ServerOverseer {
             client.sendMessage(msg);
         }
     }
-
-    public void checkIfClientsWonBet() {
-        for (Client client : clientList) {
-            if (client.getBet() != null) {
-                if (client.getBet().getBetRound() != 0) {
-                    if (serverGameLogic.checkIfBetWon(client)) {
-                        JSONMessage betWon = JSONMessageBuilder.create_message(BET_WON);
-                        client.sendMessage(betWon);
-                    } else {
-                        JSONMessage betLost = JSONMessageBuilder.create_message(BET_LOST);
-                        client.sendMessage(betLost);
-                    }
-                }
-            }
-        }
-    }
-    public void resetBets(){
-        for(Client client : clientList)
-        {
-            client.clearBet();
-        }
-    }
-
 }
