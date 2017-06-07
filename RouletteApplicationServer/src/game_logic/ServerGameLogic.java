@@ -35,14 +35,42 @@ public class ServerGameLogic
         System.out.println("CLIENT_" + msgSender.clientId + ": "+ msg.getRawJSONString());
         switch(msg.getMsgType()){
             case SIGN_UP:
-//                if(serverOverseer.checkDataBaseForLogin(msg.getDictionary().get("login")))
-//                    serverOverseer.addNewClient(msgSender);
+                String newLogin = msg.getDictionary().get("login");
+                String newPassword = msg.getDictionary().get("password");
+
+                UserDTO searchUserResult = serverOverseer.databaseClient.searchUser(newLogin);
+                if(searchUserResult.isPresent()){
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_DUPLICATE));
+                }
+                else {
+                    if(serverOverseer.databaseClient.createUser(newLogin, newPassword)){
+                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK));
+                        msgSender.authenticatedSuccesfully = true;
+                        serverOverseer.addNewClient(msgSender);
+                    }
+                    else {
+                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_UNABLE));
+                    }
+                }
                 break;
             case LOG_IN:
-                MessageType loginMsg = msgSender.authenticateClient(msg);
-                if (msgSender.authenticatedSuccesfully)
+                String login = msg.getDictionary().get("login");
+                String password = msg.getDictionary().get("password");
+                UserDTO searchUserResult2 = serverOverseer.databaseClient.searchUser(login);
+                if( ! searchUserResult2.isPresent()){
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_INVALID));
+                }
+                else if ( searchUserResult2.isBlocked()){
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BLOCKED));
+                }
+                else if ( searchUserResult2.getPassword().equals(password) ){
+                    msgSender.authenticatedSuccesfully = true;
                     serverOverseer.addNewClient(msgSender);
-                msgSender.sendMessage(JSONMessageBuilder.create_message(loginMsg));
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_OK));
+                }
+                else {
+                    msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.WRONG_PASS));
+                }
                 break;
             case LOG_OUT:
                 JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);
@@ -53,11 +81,14 @@ public class ServerGameLogic
                 int betRound = Integer.parseInt(msg.getDictionary().get("session_number"));
                 int betValue = Integer.parseInt(msg.getDictionary().get("value"));
                 String betColor = msg.getDictionary().get("bet");
-                if(currentGameState.equals(GameState.BETTING))
-                {
+
+                if(currentGameState.equals(GameState.BETTING)) {
                     if(betRound == roundNumber){
 
                         msgSender.setBet(betRound, betValue, betColor);
+                    }
+                    else {
+                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BAD_SESSION_ID));
                     }
 
                 }

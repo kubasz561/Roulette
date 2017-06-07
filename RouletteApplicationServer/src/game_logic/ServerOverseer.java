@@ -19,6 +19,7 @@ public class ServerOverseer {
     public Semaphore gameLogicMutex = new Semaphore(1);
     public ServerGameLogic serverGameLogic = new ServerGameLogic(this);
     public boolean isRunning = true;
+    public DatabaseClient databaseClient;
 
     private static ServerOverseer Instance;
     public Connection dbConnection;
@@ -33,14 +34,13 @@ public class ServerOverseer {
     }
 
     public void deleteClientFromList(Client clientToFind){
-        //mutex na dostep do clientlist
-       // clientToFind.clientComThread.closeAll();
+        ///mutex from handleMessage
         if(clientList.removeIf(client -> client.equals(clientToFind)))
             --clientsNmbr;
     }
 
     public void addNewClient(Client client)
-    {//mutex tutaj na dostep do clientlist
+    {//mutex from handleMessage
         clientsNmbr++;
         clientList.add(client);
         if (clientsNmbr == 1)
@@ -57,7 +57,7 @@ public class ServerOverseer {
         for (Client client : clientList) {
             if (client.getBet() != null) {
                 if (client.getBet().getBetRound() != 0) {
-                    if (serverGameLogic.checkIfBetWon(client) == true) {
+                    if (serverGameLogic.checkIfBetWon(client)) {
                         JSONMessage betWon = JSONMessageBuilder.create_message(BET_WON);
                         client.sendMessage(betWon);
                     } else {

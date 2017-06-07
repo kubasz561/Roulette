@@ -15,9 +15,11 @@ public class JSONMessageBuilder implements Serializable{
     {
         typeToStringTemplateMap.put(MessageType.SIGN_UP, "'login': {0} ,'password': {1} ");
         typeToStringTemplateMap.put(MessageType.SIGN_UP_OK, "'response': 'sing_up_ok'");
+        typeToStringTemplateMap.put(MessageType.SIGN_UP_UNABLE, "'response': 'sing_up_unable'");
         typeToStringTemplateMap.put(MessageType.LOGIN_OK, "'response': 'login_up_ok'");
         typeToStringTemplateMap.put(MessageType.LOGIN_DUPLICATE, "'response': 'login_duplicate'");
         typeToStringTemplateMap.put(MessageType.LOG_IN, "'login':{0}, 'password':{1}");
+        typeToStringTemplateMap.put(MessageType.LOGIN_INVALID, "'response': 'login_invalid'");
         typeToStringTemplateMap.put(MessageType.WRONG_PASS, "'response':'wrong_password'");
         typeToStringTemplateMap.put(MessageType.BLOCKED, "'response':'blocked_user'");
         typeToStringTemplateMap.put(MessageType.LOG_OUT, "'request': 'log_out'");

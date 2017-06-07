@@ -141,6 +141,15 @@ public class GameStateController {
                 this.clientPassword = connectGUI.getPassword();
                 changeLogToGameFrame();
                 break;
+            case LOGIN_INVALID:
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "User doesn't exist");
+                connectGUI.clearPassword();
+                break;
+            case SIGN_UP_UNABLE:
+                JOptionPane.showMessageDialog(bettingGUI,
+                        "Unable to sign up");
+                break;
 
             case LOG_OUT_OK:
 
