@@ -76,33 +76,36 @@ public class ServerGameLogic
                 }
                 break;
             case LOG_OUT:
-                JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);
-                msgSender.sendMessage(tmpMsg);
-                serverOverseer.deleteClientFromList(msgSender);
+                if (msgSender.authenticatedSuccesfully) {
+                    JSONMessage tmpMsg = JSONMessageBuilder.create_message(MessageType.LOG_OUT_OK);
+                    msgSender.sendMessage(tmpMsg);
+                    serverOverseer.deleteClientFromList(msgSender);
+                }
                 break;
             case SET_BET:
-                int betRound = Integer.parseInt(msg.getDictionary().get("session_number"));
-                int betValue = Integer.parseInt(msg.getDictionary().get("value"));
-                String betColor = msg.getDictionary().get("bet");
+                if(msgSender.authenticatedSuccesfully) {
+                    int betRound = Integer.parseInt(msg.getDictionary().get("session_number"));
+                    int betValue = Integer.parseInt(msg.getDictionary().get("value"));
+                    String betColor = msg.getDictionary().get("bet");
 
-                if(currentGameState.equals(GameState.BETTING)) {
-                    if(betRound == roundNumber){
+                    if (currentGameState.equals(GameState.BETTING)) {
+                        if (betRound == roundNumber) {
+                            int msgSenderAccount = serverOverseer.databaseClient.getClientAccount(msgSender);
+                            if (msgSenderAccount > betValue){
+                                msgSender.setBet(betRound, betValue, betColor);
+                                msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BET_OK));
+                            }
+                            else {
+                                msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BET_UNABLE));
+                            }
+                        } else {
+                            msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BAD_SESSION_ID));
+                        }
 
-                        msgSender.setBet(betRound, betValue, betColor);
+                    } else {
+                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BET_UNABLE));
                     }
-                    else {
-                        msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.BAD_SESSION_ID));
-                    }
-
                 }
-                else{
-                    JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.BET_UNABLE);
-                    msgSender.sendMessage(tmpMsg1);
-                }
-                //sprawdz czy stan mozna obstawiac
-                //sprawdz czy numer sesji ok
-                // sprawdz w bazie czy w ystarczajaco tokenow
-                // przyjmij beta
                 break;
             default:
                 break;
