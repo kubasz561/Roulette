@@ -4,6 +4,7 @@ import com.kubasz561.roulette.common.JSONMessage;
 import com.kubasz561.roulette.common.JSONMessageBuilder;
 import communication.Client;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -20,6 +21,7 @@ public class ServerOverseer {
     public boolean isRunning = true;
 
     private static ServerOverseer Instance;
+    public Connection dbConnection;
 
     private ServerOverseer() {
     }
