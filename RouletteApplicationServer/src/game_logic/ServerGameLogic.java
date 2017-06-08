@@ -42,13 +42,14 @@ public class ServerGameLogic
                 String newPassword = msg.getDictionary().get("password");
 
                 UserDTO searchUserResult = serverOverseer.databaseClient.searchUser(newLogin);
-                if(searchUserResult.isPresent()){
+                if(searchUserResult != null){
                     msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_DUPLICATE));
                 }
                 else {
                     if(serverOverseer.databaseClient.createUser(newLogin, newPassword)){
                         msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK, Integer.toString(serverOverseer.databaseClient.getClientAccount(msgSender))));
                         msgSender.authenticatedSuccesfully = true;
+                        msgSender.setLogin(newLogin);
                         serverOverseer.addNewClient(msgSender);
                     }
                     else {
@@ -60,7 +61,7 @@ public class ServerGameLogic
                 String login = msg.getDictionary().get("login");
                 String password = msg.getDictionary().get("password");
                 UserDTO searchUserResult2 = serverOverseer.databaseClient.searchUser(login);
-                if( ! searchUserResult2.isPresent()){
+                if(searchUserResult2 == null){
                     msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_INVALID));
                 }
                 else if ( searchUserResult2.isBlocked()){
@@ -68,6 +69,7 @@ public class ServerGameLogic
                 }
                 else if ( searchUserResult2.getPassword().equals(password) ){
                     msgSender.authenticatedSuccesfully = true;
+                    msgSender.setLogin(login);
                     serverOverseer.addNewClient(msgSender);
                     msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.LOGIN_OK, Integer.toString(serverOverseer.databaseClient.getClientAccount(msgSender))));
                 }
@@ -120,7 +122,7 @@ public class ServerGameLogic
                         JSONMessage betWon = JSONMessageBuilder.create_message(BET_WON, Integer.toString(serverOverseer.databaseClient.getClientAccount(client)));
                         client.sendMessage(betWon);
                     } else {
-                        serverOverseer.databaseClient.updateClientAccount(client, -getBetMultiplier()*client.getBet().getBetValue());
+                        serverOverseer.databaseClient.updateClientAccount(client, - client.getBet().getBetValue());
                         JSONMessage betLost = JSONMessageBuilder.create_message(BET_LOST , Integer.toString(serverOverseer.databaseClient.getClientAccount(client)));
                         client.sendMessage(betLost);
                     }
@@ -202,7 +204,7 @@ public class ServerGameLogic
                 rouletteTab[i] = RollResult.RED;
         }
         Random rand = new Random();
-        int randVal = rand.nextInt(38);
+        int randVal = rand.nextInt(36);
         return rouletteTab[randVal];
 
     }

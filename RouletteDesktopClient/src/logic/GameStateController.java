@@ -63,7 +63,7 @@ public class GameStateController {
             mainOverseer.comFlagSemaphore.tryAcquire();
             if(bettingGUI.getBetAmount().isEmpty())
                  return;
-            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue() || bettingGUI.getBetAmountValue() <= 0 )
                 return;
             JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,"GREEN" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber));
             try{
@@ -82,7 +82,7 @@ public class GameStateController {
             mainOverseer.comFlagSemaphore.tryAcquire();
             if(bettingGUI.getBetAmount().isEmpty())
                 return;
-            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue() || bettingGUI.getBetAmountValue() <= 0 )
                 return;
             JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,"RED" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber));
             try{
@@ -101,7 +101,7 @@ public class GameStateController {
             mainOverseer.comFlagSemaphore.tryAcquire();
             if(bettingGUI.getBetAmount().isEmpty())
                 return;
-            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue())
+            if(bettingGUI.getAccountValue() < bettingGUI.getBetAmountValue() || bettingGUI.getBetAmountValue() <= 0 )
                 return;
             JSONMessage betMsg = JSONMessageBuilder.create_message(MessageType.SET_BET,"BLACK" ,bettingGUI.getBetAmount(),Integer.toString(sessionNuber));
             try{

@@ -14,9 +14,8 @@ import java.util.concurrent.BlockingQueue;
 public class Client {
     public CommunicationManagerServer clientComThread;
     public int clientId;
-    public String passHash;
-    public double accountBalance;
-    public BlockingQueue<JSONMessage> outgoingQueue;
+    private String login;
+    public int accountBalance;
     public boolean authenticatedSuccesfully;
     private Bet currentBet;
 
@@ -49,4 +48,13 @@ public class Client {
     public Bet getBet(){
         return currentBet;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
 }

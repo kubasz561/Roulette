@@ -6,14 +6,14 @@ package game_logic;
 public class UserDTO {
     private String login;
     private String password;
+    private int accountBalance;
     private boolean isBlocked;
-    private boolean isPresent;
 
-    public UserDTO(String login, String password, boolean isBlocked, boolean isPresent) {
+    public UserDTO(String login, String password, int accountBalance, boolean isBlocked) {
         this.login = login;
         this.password = password;
         this.isBlocked = isBlocked;
-        this.isPresent = isPresent;
+        this.accountBalance = accountBalance;
     }
 
     public String getLogin() {
@@ -32,19 +32,20 @@ public class UserDTO {
         this.password = password;
     }
 
+
+    public int getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(int accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
     public boolean isBlocked() {
         return isBlocked;
     }
 
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
-    }
-
-    public boolean isPresent() {
-        return isPresent;
-    }
-
-    public void setPresent(boolean present) {
-        isPresent = present;
     }
 }
