@@ -13,7 +13,7 @@ public class JSONMessageBuilder implements Serializable{
     //TODO: Wprowadzić template'y do fomratowania stringów z komunikatami
     static
     {
-        typeToStringTemplateMap.put(MessageType.SIGN_UP, "'login': {0} ,'password': {1} ");
+        typeToStringTemplateMap.put(MessageType.SIGN_UP, "'login':{0} ,'password':{1}");
         typeToStringTemplateMap.put(MessageType.SIGN_UP_OK, "'response': 'sing_up_ok','account_balance':{0}");
         typeToStringTemplateMap.put(MessageType.SIGN_UP_UNABLE, "'response': 'sing_up_unable'");
         typeToStringTemplateMap.put(MessageType.LOGIN_OK, "'response': 'login_ok','account_balance':{0}");

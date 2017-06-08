@@ -47,9 +47,9 @@ public class ServerGameLogic
                 }
                 else {
                     if(serverOverseer.databaseClient.createUser(newLogin, newPassword)){
+                        msgSender.setLogin(newLogin);
                         msgSender.sendMessage(JSONMessageBuilder.create_message(MessageType.SIGN_UP_OK, Integer.toString(serverOverseer.databaseClient.getClientAccount(msgSender))));
                         msgSender.authenticatedSuccesfully = true;
-                        msgSender.setLogin(newLogin);
                         serverOverseer.addNewClient(msgSender);
                     }
                     else {
@@ -172,17 +172,15 @@ public class ServerGameLogic
         String account;
         switch(msgType) {
             case TIMESTAMP_TO_RESULT:
-                account = Integer.toString(2000); // pobranie z bazy
                 currentResult = rollRoulette();
                 String result = currentResult.toString();
                 String stateTimeResult = Long.toString(phaseTimer.getResultsTime());
-                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,stateTimeResult,result,account);
+                JSONMessage tmpMsg1 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_RESULT,Integer.toString(roundNumber) ,stateTimeResult,result);
                 serverOverseer.sendMessageToAll(tmpMsg1);
                 break;
             case TIMESTAMP_TO_BET:
-                account = Integer.toString(2500); // pobranie z bazy
                 String stateTimeBet = Long.toString(phaseTimer.getBettingTime());
-                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, Integer.toString(roundNumber),stateTimeBet,account);
+                JSONMessage tmpMsg2 = JSONMessageBuilder.create_message(MessageType.TIMESTAMP_TO_BET, Integer.toString(roundNumber),stateTimeBet);
                 serverOverseer.sendMessageToAll(tmpMsg2);
                 break;
             case TIMESTAMP_TO_ROLL:

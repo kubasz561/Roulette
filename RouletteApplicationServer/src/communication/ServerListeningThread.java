@@ -42,7 +42,7 @@ public class ServerListeningThread extends Thread{
         }
         catch(IOException | ClassNotFoundException e)
         {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         finally {
             communicationManagerServer.closeAll();
